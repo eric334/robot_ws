@@ -1,0 +1,2 @@
+main_node
+-DCATKIN_DEVEL_PREFIX=/home/e/robot_ws/devel -DCMAKE_INSTALL_PREFIX=/home/e/robot_ws/install -G Unix Makefiles
