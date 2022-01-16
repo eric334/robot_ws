@@ -1,0 +1,8 @@
+prefix=/home/nvidia/robot_ws/install
+
+Name: camera_node
+Description: Description of camera_node
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/nvidia/robot_ws/install/lib 
+Requires: 

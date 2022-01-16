@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/e/robot_ws/src
+CMAKE_SOURCE_DIR = /home/nvidia/robot_ws/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/e/robot_ws/build
+CMAKE_BINARY_DIR = /home/nvidia/robot_ws/build
 
 # Utility rule file for geometry_msgs_generate_messages_cpp.
 
@@ -63,10 +63,10 @@ main_node/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/build: geometry_msg
 .PHONY : main_node/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/build
 
 main_node/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/clean:
-	cd /home/e/robot_ws/build/main_node && $(CMAKE_COMMAND) -P CMakeFiles/geometry_msgs_generate_messages_cpp.dir/cmake_clean.cmake
+	cd /home/nvidia/robot_ws/build/main_node && $(CMAKE_COMMAND) -P CMakeFiles/geometry_msgs_generate_messages_cpp.dir/cmake_clean.cmake
 .PHONY : main_node/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/clean
 
 main_node/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/depend:
-	cd /home/e/robot_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/e/robot_ws/src /home/e/robot_ws/src/main_node /home/e/robot_ws/build /home/e/robot_ws/build/main_node /home/e/robot_ws/build/main_node/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/nvidia/robot_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/nvidia/robot_ws/src /home/nvidia/robot_ws/src/main_node /home/nvidia/robot_ws/build /home/nvidia/robot_ws/build/main_node /home/nvidia/robot_ws/build/main_node/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : main_node/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/depend
 

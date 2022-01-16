@@ -1,2 +1,2 @@
 - setup-file:
-    local-name: /home/e/robot_ws/install/setup.sh
+    local-name: /home/nvidia/robot_ws/install/setup.sh

@@ -1,8 +1,8 @@
-# Install script for directory: /home/e/robot_ws/src/main_node
+# Install script for directory: /home/nvidia/robot_ws/src/main_node
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/e/robot_ws/install")
+  set(CMAKE_INSTALL_PREFIX "/home/nvidia/robot_ws/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -33,17 +33,17 @@ if(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/e/robot_ws/build/main_node/catkin_generated/installspace/main_node.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/nvidia/robot_ws/build/main_node/catkin_generated/installspace/main_node.pc")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/main_node/cmake" TYPE FILE FILES
-    "/home/e/robot_ws/build/main_node/catkin_generated/installspace/main_nodeConfig.cmake"
-    "/home/e/robot_ws/build/main_node/catkin_generated/installspace/main_nodeConfig-version.cmake"
+    "/home/nvidia/robot_ws/build/main_node/catkin_generated/installspace/main_nodeConfig.cmake"
+    "/home/nvidia/robot_ws/build/main_node/catkin_generated/installspace/main_nodeConfig-version.cmake"
     )
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/main_node" TYPE FILE FILES "/home/e/robot_ws/src/main_node/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/main_node" TYPE FILE FILES "/home/nvidia/robot_ws/src/main_node/package.xml")
 endif()
 

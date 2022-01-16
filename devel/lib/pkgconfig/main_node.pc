@@ -1,8 +1,8 @@
-prefix=/home/e/robot_ws/devel
+prefix=/home/nvidia/robot_ws/devel
 
 Name: main_node
 Description: Description of main_node
 Version: 0.0.0
 Cflags: 
-Libs: -L${prefix}/lib 
+Libs: -L/home/nvidia/robot_ws/devel/lib 
 Requires: 
