@@ -1,5 +1,5 @@
 remember include:
 
-source ~/catkin_ws/devel/setup.bash
+source ~/robot_ws/devel/setup.bash
 
 in .bashrc
