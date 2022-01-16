@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 import rospy
 from geometry_msgs.msg import Twist
-from sensor_msgs.msg import Joy
+from usb_cam.
 
 class cameraClass:
 
     def __init__(self):
         
-        self._sub = rospy.Subscriber('joy', Joy, self._callback)
+        self._sub = rospy.Subscriber('usb_cam_node', Joy, self._callback)
         self._pub = rospy.Publisher('main_line', Twist, queue_size=1)
 
         rospy.spin()
