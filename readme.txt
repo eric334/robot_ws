@@ -10,6 +10,7 @@ After installation:
 Copy the nomachine deb file into home
 
 Run the following in terminal:
+git clone git@github.com:eric334/robot_ws.git
 echo 'source ~/robot_ws/devel/setup.bash' >> .bashrc
 sudo apt-get update
 sudo apt-get upgrade
@@ -21,11 +22,12 @@ sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main
 sudo apt install curl
 curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
 sudo apt-get install ros-kinetic-desktop
-git clone git@github.com:eric334/robot_ws.git
 
 Running nodes individually:
-
+rosrun roboclaw_node roboclaw.launch
+rosrun usb_cam usb_cam_node
 rosrun rplidar_ros rplidarNodeClient
+rosrun joy joy_node
 
 After ROS file edit:
 catkin_make && source ~/robot_ws/devel/setup.bash
