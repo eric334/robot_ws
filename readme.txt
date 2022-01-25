@@ -20,10 +20,6 @@ sudo adduser $user dialout
 sudo userdel -f aion
 sudo userdel -f other
 sudo dpkg -i nomachine_7.7.4_1_arm64.deb
-sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-sudo apt install curl
-curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
-sudo apt-get install ros-kinetic-desktop
 
 Running nodes individually:
 rosrun roboclaw_node roboclaw.launch
