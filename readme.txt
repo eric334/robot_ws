@@ -11,6 +11,7 @@ After installation:
 Copy the nomachine deb file into home
 
 Run the following in terminal:
+udo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys <PUBKEY>
 sudo apt-get update
 sudo apt-get upgrade
 git clone git@github.com:eric334/robot_ws.git
