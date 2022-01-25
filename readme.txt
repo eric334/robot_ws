@@ -10,10 +10,10 @@ After installation:
 Copy the nomachine deb file into home
 
 Run the following in terminal:
-git clone git@github.com:eric334/robot_ws.git
-echo 'source ~/robot_ws/devel/setup.bash' >> .bashrc
 sudo apt-get update
 sudo apt-get upgrade
+git clone git@github.com:eric334/robot_ws.git
+echo 'source ~/robot_ws/devel/setup.bash' >> .bashrc
 sudo adduser $user dialout
 sudo userdel -f aion
 sudo userdel -f other
