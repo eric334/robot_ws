@@ -7,4 +7,5 @@
 subdirs(gtest)
 subdirs(camera_node)
 subdirs(main_node)
+subdirs(rplidar_ros)
 subdirs(roboclaw_node)

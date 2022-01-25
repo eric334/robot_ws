@@ -1,2 +1,2 @@
-camera_node:main_node:roboclaw_node
+camera_node:main_node:roboclaw_node:rplidar_ros
 -DCATKIN_DEVEL_PREFIX=/home/nvidia/robot_ws/devel -DCMAKE_INSTALL_PREFIX=/home/nvidia/robot_ws/install -G Unix Makefiles

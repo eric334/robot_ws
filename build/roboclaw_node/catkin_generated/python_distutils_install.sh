@@ -9,7 +9,6 @@ if [ -n "$DESTDIR" ] ; then
             /bin/echo "otherwise python's distutils will bork things."
             exit 1
     esac
-    DESTDIR_ARG="--root=$DESTDIR"
 fi
 
 echo_and_run() { echo "+ $@" ; "$@" ; }
@@ -27,7 +26,8 @@ echo_and_run /usr/bin/env \
     CATKIN_BINARY_DIR="/home/nvidia/robot_ws/build" \
     "/usr/bin/python" \
     "/home/nvidia/robot_ws/src/roboclaw_node/setup.py" \
+     \
     build --build-base "/home/nvidia/robot_ws/build/roboclaw_node" \
     install \
-    $DESTDIR_ARG \
+    --root="${DESTDIR-/}" \
     --install-layout=deb --prefix="/home/nvidia/robot_ws/install" --install-scripts="/home/nvidia/robot_ws/install/bin"

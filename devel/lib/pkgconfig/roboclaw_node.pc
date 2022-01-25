@@ -4,5 +4,5 @@ Name: roboclaw_node
 Description: Description of roboclaw_node
 Version: 0.0.1
 Cflags: 
-Libs: -L/home/nvidia/robot_ws/devel/lib 
+Libs: -L${prefix}/lib 
 Requires: 

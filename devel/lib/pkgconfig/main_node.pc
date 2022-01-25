@@ -4,5 +4,5 @@ Name: main_node
 Description: Description of main_node
 Version: 0.0.0
 Cflags: 
-Libs: -L/home/nvidia/robot_ws/devel/lib 
+Libs: -L${prefix}/lib 
 Requires: 
