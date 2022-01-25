@@ -3,6 +3,7 @@ Install jetpack 3.3 on robot using 16.04 virtual machine
 Place tx2 gold image in bootloader folder
 
 Run command
+cd Downloads/64_TX2/Linux_for_Tegra/
 sudo ./flash.sh -r -k APP jetson-tx2 mmcblk0p1
 
 After installation:
