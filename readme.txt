@@ -16,7 +16,7 @@ sudo apt-get update
 sudo apt-get upgrade
 git clone git@github.com:eric334/robot_ws.git
 echo 'source ~/robot_ws/devel/setup.bash' >> .bashrc
-sudo adduser $user dialout
+sudo adduser $USER dialout
 sudo userdel -f aion
 sudo userdel -f ubuntu
 sudo dpkg -i nomachine_7.7.4_1_arm64.deb
