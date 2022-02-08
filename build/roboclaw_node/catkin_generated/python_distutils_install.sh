@@ -24,7 +24,7 @@ echo_and_run mkdir -p "$DESTDIR/home/nvidia/robot_ws/install/lib/python2.7/dist-
 echo_and_run /usr/bin/env \
     PYTHONPATH="/home/nvidia/robot_ws/install/lib/python2.7/dist-packages:/home/nvidia/robot_ws/build/lib/python2.7/dist-packages:$PYTHONPATH" \
     CATKIN_BINARY_DIR="/home/nvidia/robot_ws/build" \
-    "/usr/bin/python" \
+    "/usr/bin/python2" \
     "/home/nvidia/robot_ws/src/roboclaw_node/setup.py" \
      \
     build --build-base "/home/nvidia/robot_ws/build/roboclaw_node" \
