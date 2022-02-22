@@ -7,8 +7,9 @@ import time
 from serial import Serial, serialutil
 
 dev = 'ttyACM0'
+baud = 115200
 
-serial = Serial(dev, timeout=1, exclusive=True)
+serial = Serial(dev, timeout=1, baudrate=baud)
 serial.open()
 
 serial.write("test\r".encode())
