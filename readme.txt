@@ -1,4 +1,4 @@
-REFLASH PROCESS
+REFLASH PROCESS - DEPRECATED, USE READY MADE FLASH INSTEAD
 Install jetpack 3.3 on robot using 16.04 virtual machine
 Place tx2 gold image in bootloader folder
 
