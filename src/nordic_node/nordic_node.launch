@@ -1,0 +1,15 @@
+<launch>
+    <arg name="dev" default="/dev/ttyACM0"/>
+    <arg name="baud" default="115200"/>
+
+    <node pkg="nordic_node" type="nordic_recv.py" name="nordic_recv">
+        <param name="~dev" value="$(arg dev)"/>
+        <param name="~baud" value="$(arg baud)"/>
+    </node>
+
+    <node pkg="nordic_node" type="nordic_send.py" name="nordic_send">
+        <param name="~dev" value="$(arg dev)"/>
+        <param name="~baud" value="$(arg baud)"/>
+    </node>
+
+</launch>

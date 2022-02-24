@@ -2,13 +2,14 @@
 import rospy
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Joy
+rom serial import Serial, serialutil
 
-class joyClass:
+class nordicSendClass:
 
     def __init__(self):
         
-        self._sub = rospy.Subscriber('joy', Joy, self._callback)
-        self._pub = rospy.Publisher('main_line', Twist, queue_size=1)
+        self._sub = rospy.Subscriber('main_nordic_send', Joy, self._callback)
+        self._pub = rospy.Publisher('main_nordic_recv', Twist)
 
         rospy.spin()
 
