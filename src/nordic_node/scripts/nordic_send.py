@@ -2,7 +2,7 @@
 import rospy
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Joy
-rom serial import Serial, serialutil
+from serial import Serial, serialutil
 
 class nordicSendClass:
 
