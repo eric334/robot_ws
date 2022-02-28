@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <launch>
-
     <arg name="dev" default="/dev/ttyACM0"/>
     <arg name="baud" default="115200"/>
     <arg name="address" default="128"/>
@@ -8,6 +7,7 @@
     <arg name="ticks_per_meter" default="4342.2"/>
     <arg name="base_width" default="0.315"/>
     <arg name="run_diag" default="true"/>
+    <arg name="subscribed_topic" default="recv_data_roboclaw"/>
 
     <node if="$(arg run_diag)" pkg="roboclaw_node" type="roboclaw_node.py" name="roboclaw_node">
         <param name="~dev" value="$(arg dev)"/>
@@ -16,6 +16,7 @@
         <param name="~max_speed" value="$(arg max_speed)"/>
         <param name="~ticks_per_meter" value="$(arg ticks_per_meter)"/>
         <param name="~base_width" value="$(arg base_width)"/>
+        <param name="~subscribed_topic" value="$(arg subscribed_topic)"
     </node>
 
     <node pkg="diagnostic_aggregator" type="aggregator_node"

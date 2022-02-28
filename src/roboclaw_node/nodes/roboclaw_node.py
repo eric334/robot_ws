@@ -183,7 +183,7 @@ class Node:
         self.encodm = EncoderOdom(self.TICKS_PER_METER, self.BASE_WIDTH)
         self.last_set_speed_time = rospy.get_rostime()
 
-        rospy.Subscriber("cmd_vel", Twist, self.cmd_vel_callback)
+        rospy.Subscriber(rospy.get_param("~subscribed_topic"), Twist, self.cmd_vel_callback)
 
         rospy.sleep(1)
 

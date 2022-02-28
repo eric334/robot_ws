@@ -17,10 +17,10 @@ class Node:
         self._sub = rospy.Subscriber('send_data_camera', CompressedImage, self.callback)
         self._pub = rospy.Subscriber('send_data_map', CompressedImage, self.callback)
 
+    def run(self):
         rospy.spin()
 
     def callback(self, data):
-
         self.serial.write(data)
 
 
