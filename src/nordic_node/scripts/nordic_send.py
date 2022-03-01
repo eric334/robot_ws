@@ -14,7 +14,7 @@ class Node:
         
         self.serial = Serial(dev, timeout=1, baudrate=baud)
 
-        self._sub = rospy.Subscriber('send_data_camera', CompressedImage, self.callback)
+        self._sub = rospy.Subscriber('usb_cam/compressed', CompressedImage, self.callback)
         self._pub = rospy.Subscriber('send_data_map', CompressedImage, self.callback)
 
     def run(self):

@@ -5,6 +5,7 @@
     <node pkg="nordic_node" type="nordic_recv.py" name="nordic_recv">
         <param name="~dev" value="$(arg dev)"/>
         <param name="~baud" value="$(arg baud)"/>
+        <param name="image_transport" value="compressed" />
     </node>
 
     <node pkg="nordic_node" type="nordic_send.py" name="nordic_send">
