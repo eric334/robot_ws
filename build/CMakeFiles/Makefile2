@@ -1739,24 +1739,6 @@ clean: hector_slam/hector_nav_msgs/CMakeFiles/hector_nav_msgs_genlisp.dir/clean
 .PHONY : clean
 
 #=============================================================================
-# Directory level rules for directory camera_node
-
-# Convenience name for "all" pass in the directory.
-camera_node/all:
-
-.PHONY : camera_node/all
-
-# Convenience name for "clean" pass in the directory.
-camera_node/clean:
-
-.PHONY : camera_node/clean
-
-# Convenience name for "preinstall" pass in the directory.
-camera_node/preinstall:
-
-.PHONY : camera_node/preinstall
-
-#=============================================================================
 # Directory level rules for directory hector_slam/hector_geotiff
 
 # Convenience name for "all" pass in the directory.
@@ -2600,22 +2582,58 @@ clean: hector_slam/hector_marker_drawing/CMakeFiles/visualization_msgs_generate_
 .PHONY : clean
 
 #=============================================================================
-# Directory level rules for directory main_node
+# Directory level rules for directory maestro_node
 
 # Convenience name for "all" pass in the directory.
-main_node/all:
+maestro_node/all:
 
-.PHONY : main_node/all
+.PHONY : maestro_node/all
 
 # Convenience name for "clean" pass in the directory.
-main_node/clean:
+maestro_node/clean:
 
-.PHONY : main_node/clean
+.PHONY : maestro_node/clean
 
 # Convenience name for "preinstall" pass in the directory.
-main_node/preinstall:
+maestro_node/preinstall:
 
-.PHONY : main_node/preinstall
+.PHONY : maestro_node/preinstall
+
+#=============================================================================
+# Directory level rules for directory example_node
+
+# Convenience name for "all" pass in the directory.
+example_node/all:
+
+.PHONY : example_node/all
+
+# Convenience name for "clean" pass in the directory.
+example_node/clean:
+
+.PHONY : example_node/clean
+
+# Convenience name for "preinstall" pass in the directory.
+example_node/preinstall:
+
+.PHONY : example_node/preinstall
+
+#=============================================================================
+# Directory level rules for directory nordic_node
+
+# Convenience name for "all" pass in the directory.
+nordic_node/all:
+
+.PHONY : nordic_node/all
+
+# Convenience name for "clean" pass in the directory.
+nordic_node/clean:
+
+.PHONY : nordic_node/clean
+
+# Convenience name for "preinstall" pass in the directory.
+nordic_node/preinstall:
+
+.PHONY : nordic_node/preinstall
 
 #=============================================================================
 # Directory level rules for directory hector_slam/hector_compressed_map_transport
