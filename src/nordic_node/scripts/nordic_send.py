@@ -31,13 +31,9 @@ class Node:
     def callback(self, data):
         self.serial.write(data)
 
-
-
 def set_compressedimage_quality(topic):
         client = dynamic_reconfigure.client.Client(topic, timeout = 3)
-        parameters = client.get_configuration()
-        params = { 'format' : 'jpeg', 'jpeg_quality' : int(jpeg_quality) }
-        config = client.update_configuration(params)
+        client.update_configuration({ 'format' : 'jpeg', 'jpeg_quality' : int(jpeg_quality)})
 
 if __name__ == '__main__':
     rospy.init_node('nordic_send', anonymous=True)

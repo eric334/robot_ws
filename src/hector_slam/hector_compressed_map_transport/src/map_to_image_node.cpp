@@ -56,7 +56,7 @@ public:
     image_transport_publisher_full_ = image_transport_->advertise("map_image/full", 1);
     image_transport_publisher_tile_ = image_transport_->advertise("map_image/tile", 1);
 
-    pose_sub_ = n_.subscribe("pose", 1, &MapAsImageProvider::poseCallback, this);
+    pose_sub_ = n_.subscribe("slam_out_pose", 1, &MapAsImageProvider::poseCallback, this);
     map_sub_ = n_.subscribe("map", 1, &MapAsImageProvider::mapCallback, this);
 
     //Which frame_id makes sense?
@@ -231,6 +231,7 @@ public:
           }
         }        
       }
+
       image_transport_publisher_tile_.publish(cv_img_tile_.toImageMsg());
     }
   }
