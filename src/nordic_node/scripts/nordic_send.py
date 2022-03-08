@@ -3,7 +3,9 @@ import rospy
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Joy
 from sensor_msgs.msg import CompressedImage
+from std_msgs.msg import Header
 from serial import Serial, serialutil
+
 
 import dynamic_reconfigure.client
 
@@ -22,13 +24,23 @@ class Node:
         
         self.serial = Serial(dev, timeout=1, baudrate=baud)
 
-        self.sub_camera = rospy.Subscriber(camera_topic, CompressedImage, self.callback)
-        self.sub_hector = rospy.Subscriber(hector_topic, CompressedImage, self.callback)
+        self.sub_camera = rospy.Subscriber(camera_topic, CompressedImage, self.callback_camera)
+        self.sub_hector = rospy.Subscriber(hector_topic, CompressedImage, self.callback_hector)
 
     def run(self):
         rospy.spin()
 
-    def callback(self, data):
+    # modify headers so they are identifiable on the other end
+    def callback_hector(self, compressedImage):
+        compressedImage.header.frame_id = "hec"
+        write_serial(compressedImage)
+    
+    # modify headers so they are identifiable on the other end
+    def callback_camera(self, compressedImage):
+        compressedImage.header.frame_id = "cam"
+        write_serial(compressedImage)
+
+    def write_serial(self, data):
         self.serial.write(data)
 
 def set_compressedimage_quality(topic):
