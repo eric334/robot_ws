@@ -2,9 +2,46 @@
 
 <launch>
   <!-- Main launch file -->
-  <include file="$(find hector_geotiff_launch)/launch/geotiff_mapper.launch">
-    <arg name="trajectory_source_frame_name" value="scanmatcher_frame"/>
-    <arg name="map_file_path" value="$(arg geotiff_map_file_path)"/>
+  
+  <!-- Nordic controller -->
+  <include file="nordic_node/launch/nordic_node.launch">
+    <arg name="dev" value="/dev/ttyACM0"/>
+    <arg name="baud" value="115200"/>
+    <arg name="camera_topic" value="/usb_cam/image_raw/compressed"/>
+    <arg name="hector_topic" value="/map_image/tile/compressed"/>
+    <arg name="jpeg_quality_level" value="40"/>
   </include>
+
+  <!-- Roboclaw motor controller -->
+  <include file="roboclaw_node/launch/roboclaw.launch">
+    <arg name="dev" value="/dev/ttyACM1"/>
+    <arg name="baud" value="115200"/>
+    <arg name="max_speed" value="2.0"/>
+    <arg name="subscribed_topic" value="recv_data_roboclaw"/>
+  </include>
+
+  <!-- Maestro motor controller -->
+  <include file="roboclaw_node/launch/roboclaw.launch">
+    <!-- does not require dev spec as using driver?-->
+    <arg name="subscribed_topic" value="/nordic_node/recv_data_roboclaw"/>
+  </include>
+
+  <!-- USB cam controller -->
+  <include file="usb_cam/launch/usb_cam.launch">
+    <arg name="dev" value="/dev/video1" />
+    <arg name="width" value="320"/>
+    <arg name="height" value="240"/>
+    <arg name="fps" value="6"/>
+  </include>
+
+  <!-- Lidar controller -->
+  <include file="rplidar_ros/launch/rplidar.launch">
+    <!-- may be USB0 or USB1 depending on maestro?-->
+    <arg name="dev" default="/dev/ttyUSB0"/>
+    <arg name="baud" default="115200"/>
+  </include>
+  
+  <!-- Hector slam -->
+  <include file="hector_slam/hector_slam_launchh/launch/hector_slam_image.launch"/>
 
 </launch>

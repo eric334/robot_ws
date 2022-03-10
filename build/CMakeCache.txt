@@ -537,10 +537,10 @@ maestro_node_BINARY_DIR:STATIC=/home/nvidia/robot_ws/build/maestro_node
 maestro_node_SOURCE_DIR:STATIC=/home/nvidia/robot_ws/src/maestro_node
 
 //Value Computed by CMake
-main_node_BINARY_DIR:STATIC=/home/nvidia/robot_ws/build/example_node
+main_node_BINARY_DIR:STATIC=/home/nvidia/robot_ws/build/joy_node
 
 //Value Computed by CMake
-main_node_SOURCE_DIR:STATIC=/home/nvidia/robot_ws/src/example_node
+main_node_SOURCE_DIR:STATIC=/home/nvidia/robot_ws/src/joy_node
 
 //The directory containing a CMake configuration file for message_filters.
 message_filters_DIR:PATH=/opt/ros/kinetic/share/message_filters/cmake

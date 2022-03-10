@@ -7,7 +7,7 @@ from serial import Serial, serialutil
 import StringIO
 import sys
 
-# deprecated way of doing this. just look at the message data itself
+    # deprecated way of doing this. just look at the message data itself
 
     # message types :
     # 00 - Empty type for maestro_node node drop - maestro_recv
@@ -30,18 +30,22 @@ import sys
     # def bits(data):
     #     return sys.getsizeof(data) * 8
 
-
+maestro_topic = rospy.get_param("~maestro_topic", "")
+roboclaw_topic = rospy.get_param("~roboclaw_topic", "")
 
 # recieve data messages from nordic, get message type and publish
 class Node:
     def __init__(self):
+        global maestro_topic
+        global roboclaw_topic
+
         dev = rospy.get_param("~dev", "/dev/ttyACM0")
         baud = int(rospy.get_param("~baud", "115200"))
         
         self.serial = Serial(dev, timeout=1, baudrate=baud)
 
-        self.pub_maestro = rospy.Publisher('recv_data_maestro', Empty)
-        self.pub_roboclaw = rospy.Publisher('recv_data_roboclaw', Twist)
+        self.pub_maestro = rospy.Publisher(maestro_topic, Empty)
+        self.pub_roboclaw = rospy.Publisher(roboclaw_topic, Twist)
 
     def run(self):
         rate = rospy.Rate(100)

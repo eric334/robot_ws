@@ -1,0 +1,8 @@
+prefix=/home/nvidia/robot_ws/install
+
+Name: main_node
+Description: Description of main_node
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

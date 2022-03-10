@@ -71,9 +71,6 @@ ioctl: VIDIOC_ENUM_FMT
 
 -->
 
-
-
-
 <launch>
   <arg name="width" default="320"/>
   <arg name="height" default="240"/>

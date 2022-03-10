@@ -1,9 +1,14 @@
 <launch>
     <arg name="dev" default="/dev/ttyACM0"/>
     <arg name="baud" default="115200"/>
-    <arg name="camera_topic" default ="usb_cam/image_raw/compressed"/>
-    <arg name="hector_topic" default = "TODO"/>
+
+    <arg name="camera_topic" default="/usb_cam/image_raw/compressed"/>
+    <arg name="hector_topic" default="/map_image/tile/compressed"/>
     <arg name="jpeg_quality_level" default="40"/>
+
+    <arg name="maestro_topic" default="recv_data_maestro"/>
+    <arg name="roboclaw_topic" default="recv_data_roboclaw"/>
+    
 
     <node pkg="nordic_node" type="nordic_recv.py" name="nordic_recv">
         <param name="~dev" value="$(arg dev)"/>
@@ -16,6 +21,8 @@
     <node pkg="nordic_node" type="nordic_send.py" name="nordic_send">
         <param name="~dev" value="$(arg dev)"/>
         <param name="~baud" value="$(arg baud)"/>
+        <param name="~maestro_topic" value="$(arg maestro_topic)"/>
+        <param name="~roboclaw_topic" value="$(arg roboclaw_topic)"/>
     </node>
 
 </launch>

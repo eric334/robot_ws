@@ -9,9 +9,9 @@ from serial import Serial, serialutil
 
 import dynamic_reconfigure.client
 
-camera_topic = rospy.get_param("~camera_topic", "usb_cam/image_raw/compressed")
-hector_topic = rospy.get_param("~hector_topic", "TODO")
-jpeg_quality = rospy.get_param("~jpeg_quality_level", "50")
+camera_topic = rospy.get_param("~camera_topic", "")
+hector_topic = rospy.get_param("~hector_topic", "")
+jpeg_quality = rospy.get_param("~jpeg_quality_level", "")
 
 class Node:
 
@@ -19,8 +19,8 @@ class Node:
         global camera_topic
         global hector_topic
 
-        dev = rospy.get_param("~dev", "/dev/ttyACM0")
-        baud = int(rospy.get_param("~baud", "115200"))
+        dev = rospy.get_param("~dev", "")
+        baud = int(rospy.get_param("~baud", ""))
         
         self.serial = Serial(dev, timeout=1, baudrate=baud)
 

@@ -4,10 +4,13 @@ from std_msgs.msg import Empty
 import os
 import time
 
+subscribed_topic = rospy.get_param("~subscribed_topic", "")
+
 class Node:
+    global subscribed_topic
 
     def __init__(self):
-        self._sub = rospy.Subscriber('recv_data_maestro', Empty, self.callback)
+        self._sub = rospy.Subscriber(subscribed_topic, Empty, self.callback)
 
     def run(self):
         rospy.spin()
@@ -19,6 +22,6 @@ class Node:
         
 
 if __name__ == '__main__':
-    rospy.init_node('maestro_controller', anonymous=True)
+    rospy.init_node('maestro_node', anonymous=True)
     node = Node()
     node.run()

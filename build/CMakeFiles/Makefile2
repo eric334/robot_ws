@@ -2600,22 +2600,22 @@ maestro_node/preinstall:
 .PHONY : maestro_node/preinstall
 
 #=============================================================================
-# Directory level rules for directory example_node
+# Directory level rules for directory joy_node
 
 # Convenience name for "all" pass in the directory.
-example_node/all:
+joy_node/all:
 
-.PHONY : example_node/all
+.PHONY : joy_node/all
 
 # Convenience name for "clean" pass in the directory.
-example_node/clean:
+joy_node/clean:
 
-.PHONY : example_node/clean
+.PHONY : joy_node/clean
 
 # Convenience name for "preinstall" pass in the directory.
-example_node/preinstall:
+joy_node/preinstall:
 
-.PHONY : example_node/preinstall
+.PHONY : joy_node/preinstall
 
 #=============================================================================
 # Directory level rules for directory nordic_node

@@ -6,7 +6,7 @@ import os
 import time
 from serial import Serial, serialutil
 
-dev = 'ttyACM0'
+dev = '/dev/ttyACM0'
 baud = 115200
 
 serial = Serial(dev, timeout=1, baudrate=baud)
