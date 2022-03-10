@@ -9,9 +9,9 @@ class Node:
 
     def __init__(self):
         subscribed_topic = rospy.get_param("~subscribed_topic", "")
-        
+
         self._sub = rospy.Subscriber(subscribed_topic, Empty, self.callback)
-        #rospy.loginfo("subscribed topic : " + subscribed_topic)
+        rospy.loginfo("Maestro - subscribed topic : " + subscribed_topic)
 
     def run(self):
         rospy.spin()

@@ -39,10 +39,14 @@ class Node:
         dev = rospy.get_param("~dev", "/dev/ttyACM0")
         baud = int(rospy.get_param("~baud", "115200"))
         
+        rospy.loginfo("Nordic_recv - opening serial : " + dev)
+        # TODO COPY SPECIFICS
         self.serial = Serial(dev, timeout=1, baudrate=baud)
 
         self.pub_maestro = rospy.Publisher(maestro_topic, Empty)
+        rospy.loginfo("Nordic_recv - published topic : " + subscribed_topic)
         self.pub_roboclaw = rospy.Publisher(roboclaw_topic, Twist)
+        rospy.loginfo("Nordic_recv - published topic : " + subscribed_topic)
 
     def run(self):
         rate = rospy.Rate(100)

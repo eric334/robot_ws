@@ -6,10 +6,7 @@ from sensor_msgs.msg import CompressedImage
 from std_msgs.msg import Header
 from serial import Serial, serialutil
 
-
 import dynamic_reconfigure.client
-
-
 
 class Node:
 
@@ -24,7 +21,8 @@ class Node:
 
         dev = rospy.get_param("~dev", "")
         baud = int(rospy.get_param("~baud", ""))
-        
+        rospy.loginfo("Nordic_send - opening serial : " + dev)
+        # TODO COPY SPECIFICS
         self.serial = Serial(dev, timeout=1, baudrate=baud)
 
         self.sub_camera = rospy.Subscriber(camera_topic, CompressedImage, self.callback_camera)

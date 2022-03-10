@@ -6,10 +6,10 @@ import os
 import time
 from serial import Serial, serialutil
 
-dev = '/dev/ttyACM0'
+dev = '/dev/ttyUSB0'
 baud = 115200
 
-serial = Serial(dev, timeout=1, baudrate=baud)
+serial = Serial(dev, timeout=1, baudrate=baud, bytesize=8, parity='N', stopbits=1)
 serial.open()
 
 serial.write("test\r".encode())
