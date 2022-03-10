@@ -28,16 +28,13 @@ import sys
     #     return data >> (bits(data) - flag_length)
 
     # def bits(data):
-    #     return sys.getsizeof(data) * 8
-
-maestro_topic = rospy.get_param("~maestro_topic", "")
-roboclaw_topic = rospy.get_param("~roboclaw_topic", "")
+    #     return sys.getsizeof(data) * 
 
 # recieve data messages from nordic, get message type and publish
 class Node:
     def __init__(self):
-        global maestro_topic
-        global roboclaw_topic
+        maestro_topic = rospy.get_param("~maestro_topic", "")
+        roboclaw_topic = rospy.get_param("~roboclaw_topic", "")
 
         dev = rospy.get_param("~dev", "/dev/ttyACM0")
         baud = int(rospy.get_param("~baud", "115200"))

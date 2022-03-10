@@ -1,7 +1,7 @@
 <launch>
     <arg name="subscribed_topic" default="/nordic_node/recv_data_maestro"/>
 
-    <node pkg="maestro_node" type="maestro_recv.py" name="maestro_node">
+    <node pkg="maestro_node" type="maestro_node.py" name="maestro_node" output="screen">
         <param name="~subscribed_topic" value="$(arg subscribed_topic)"/>
     </node>
 

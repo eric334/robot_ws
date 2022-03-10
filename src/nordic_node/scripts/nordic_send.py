@@ -9,15 +9,18 @@ from serial import Serial, serialutil
 
 import dynamic_reconfigure.client
 
-camera_topic = rospy.get_param("~camera_topic", "")
-hector_topic = rospy.get_param("~hector_topic", "")
-jpeg_quality = rospy.get_param("~jpeg_quality_level", "")
+
 
 class Node:
 
     def __init__(self):
-        global camera_topic
-        global hector_topic
+
+        camera_topic = rospy.get_param("~camera_topic", "")
+        hector_topic = rospy.get_param("~hector_topic", "")
+        jpeg_quality = rospy.get_param("~jpeg_quality_level", "")
+
+        set_compressedimage_quality(camera_topic, jpeg_quality)
+        set_compressedimage_quality(hector_topic, jpeg_quality)
 
         dev = rospy.get_param("~dev", "")
         baud = int(rospy.get_param("~baud", ""))
@@ -43,16 +46,12 @@ class Node:
     def write_serial(self, data):
         self.serial.write(data)
 
-def set_compressedimage_quality(topic):
-        client = dynamic_reconfigure.client.Client(topic, timeout = 3)
-        client.update_configuration({ 'format' : 'jpeg', 'jpeg_quality' : int(jpeg_quality)})
+    def set_compressedimage_quality(self, topic, quality):
+            client = dynamic_reconfigure.client.Client(topic, timeout = 3)
+            client.update_configuration({ 'format' : 'jpeg', 'jpeg_quality' : int(quality)})
 
 if __name__ == '__main__':
     rospy.init_node('nordic_send', anonymous=True)
-
-    set_compressedimage_quality(camera_topic)
-    set_compressedimage_quality(hector_topic)
-
     node = Node()
     node.run()
 
