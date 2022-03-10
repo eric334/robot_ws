@@ -16,7 +16,7 @@
         <param name="~max_speed" value="$(arg max_speed)"/>
         <param name="~ticks_per_meter" value="$(arg ticks_per_meter)"/>
         <param name="~base_width" value="$(arg base_width)"/>
-        <param name="~subscribed_topic" value="$(arg subscribed_topic)"
+        <param name="~subscribed_topic" value="$(arg subscribed_topic)"/>
     </node>
 
     <node pkg="diagnostic_aggregator" type="aggregator_node"
