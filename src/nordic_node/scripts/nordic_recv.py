@@ -41,7 +41,7 @@ class Node:
         
         rospy.loginfo("Nordic_recv - opening serial : " + dev)
         # TODO COPY SPECIFICS ?
-        #self.serial = Serial(dev, timeout=1, baudrate=baud)
+        self.serial = Serial(dev, timeout=1, baudrate=baud)
 
         self.pub_maestro = rospy.Publisher(maestro_topic, Empty)
         rospy.loginfo("Nordic_recv - published topic : " + maestro_topic)
@@ -71,4 +71,4 @@ class Node:
 if __name__ == '__main__':
     rospy.init_node('nordic_recv', anonymous=True)
     node = Node()
-    #node.run()
+    node.run()

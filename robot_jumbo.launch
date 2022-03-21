@@ -9,6 +9,8 @@
     <arg name="baud" value="115200"/>
     <arg name="camera_topic" value="/usb_cam/image_raw/compressed"/>
     <arg name="hector_topic" value="/map_image/tile/compressed"/>
+    <arg name="maestro_topic" value="recv_data_maestro"/>
+    <arg name="roboclaw_topic" value="recv_data_roboclaw"/>
     <arg name="jpeg_quality_level" value="40"/>
   </include>
 
