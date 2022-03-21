@@ -200,7 +200,8 @@ class Node:
         while not rospy.is_shutdown():
 
             if (rospy.get_rostime() - self.last_set_speed_time).to_sec() > 1:
-                rospy.loginfo("Did not get command for 1 second, stopping")
+                self.last_set_speed_time = rospy.get_rostime()
+                rospy.loginfo("Roboclaw_node - no cmd stopping motors")
                 try:
                     roboclaw.ForwardM1(self.address, 0)
                     roboclaw.ForwardM2(self.address, 0)

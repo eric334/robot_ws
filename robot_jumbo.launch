@@ -14,10 +14,10 @@
 
   <!-- Roboclaw motor controller -->
   <include file="src/roboclaw_node/launch/roboclaw.launch">
-    <arg name="dev" value="/dev/ttyACM1"/>
+    <arg name="dev" value="/dev/ttyACM0"/>
     <arg name="baud" value="115200"/>
     <arg name="max_speed" value="2.0"/>
-    <arg name="subscribed_topic" value="recv_data_roboclaw"/>
+    <arg name="subscribed_topic" value="/nordic_node/recv_data_roboclaw"/>
   </include>
 
   <!-- Maestro motor controller -->
