@@ -2,7 +2,7 @@
 
 <launch>
   <!-- Main launch file -->
-  
+
   <!-- Nordic controller -->
   <include file="src/nordic_node/launch/nordic.launch">
     <arg name="dev" value="/dev/ttyACM0"/>

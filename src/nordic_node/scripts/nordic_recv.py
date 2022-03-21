@@ -33,20 +33,20 @@ import sys
 # recieve data messages from nordic, get message type and publish
 class Node:
     def __init__(self):
-        maestro_topic = rospy.get_param("~maestro_topic", "")
-        roboclaw_topic = rospy.get_param("~roboclaw_topic", "")
+        maestro_topic = rospy.get_param("~maestro_topic")
+        roboclaw_topic = rospy.get_param("~roboclaw_topic")
 
         dev = rospy.get_param("~dev", "/dev/ttyACM0")
         baud = int(rospy.get_param("~baud", "115200"))
         
         rospy.loginfo("Nordic_recv - opening serial : " + dev)
-        # TODO COPY SPECIFICS
-        self.serial = Serial(dev, timeout=1, baudrate=baud)
+        # TODO COPY SPECIFICS ?
+        #self.serial = Serial(dev, timeout=1, baudrate=baud)
 
         self.pub_maestro = rospy.Publisher(maestro_topic, Empty)
-        rospy.loginfo("Nordic_recv - published topic : " + subscribed_topic)
+        rospy.loginfo("Nordic_recv - published topic : " + maestro_topic)
         self.pub_roboclaw = rospy.Publisher(roboclaw_topic, Twist)
-        rospy.loginfo("Nordic_recv - published topic : " + subscribed_topic)
+        rospy.loginfo("Nordic_recv - published topic : " + roboclaw_topic)
 
     def run(self):
         rate = rospy.Rate(100)
@@ -71,4 +71,4 @@ class Node:
 if __name__ == '__main__':
     rospy.init_node('nordic_recv', anonymous=True)
     node = Node()
-    node.run()
+    #node.run()

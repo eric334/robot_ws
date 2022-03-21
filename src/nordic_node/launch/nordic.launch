@@ -9,7 +9,7 @@
     <arg name="maestro_topic" default="recv_data_maestro"/>
     <arg name="roboclaw_topic" default="recv_data_roboclaw"/>
 
-    <node pkg="nordic_node" type="nordic_recv.py" name="nordic_recv" output="screen">
+    <node pkg="nordic_node" type="nordic_send.py" name="nordic_recv" output="screen">
         <param name="~dev" value="$(arg dev)"/>
         <param name="~baud" value="$(arg baud)"/>
         <param name="~camera_topic" value="$(arg camera_topic)"/>
@@ -17,7 +17,7 @@
         <param name="~jpeg_quality_level" value="$(arg jpeg_quality_level)"/>
     </node>
 
-    <node pkg="nordic_node" type="nordic_send.py" name="nordic_send" output="screen">
+    <node pkg="nordic_node" type="nordic_recv.py" name="nordic_send" output="screen">
         <param name="~dev" value="$(arg dev)"/>
         <param name="~baud" value="$(arg baud)"/>
         <param name="~maestro_topic" value="$(arg maestro_topic)"/>
