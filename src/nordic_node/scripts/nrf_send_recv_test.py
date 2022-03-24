@@ -10,15 +10,14 @@ dev = '/dev/ttyACM0'
 baud = 115200
 
 serial = Serial(dev, timeout=1, baudrate=baud)
-if(serial.isOpen() == False):
-    serial.open()
+serial.close()
+serial.open()
 
 serial.write("t".encode())
 
 while True:
-    print(serial.readlines())
-    #bytesToRead = serial.inWaiting()
-    #data = serial.read(bytesToRead)
-    # if (bytesToRead > 0):
-    #     print(bytesToRead)
-    #     print(data)
+    bytesToRead = serial.inWaiting()
+    data = serial.read(bytesToRead)
+    if (bytesToRead > 0):
+        print(bytesToRead)
+        print(data)
