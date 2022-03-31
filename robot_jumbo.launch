@@ -45,5 +45,4 @@
   
   <!-- Hector slam -->
   <include file="src/hector_slam/hector_slam_launch/launch/hector_slam_image.launch"/>
-
 </launch>

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import sys
 import rospy
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Joy
@@ -33,6 +34,7 @@ class Node:
         rospy.loginfo("Nordic_send - subscribed to topic : " + camera_topic)
         self.sub_hector = rospy.Subscriber(hector_topic, CompressedImage, self.callback_hector)
         rospy.loginfo("Nordic_send - subscribed to topic : " + hector_topic)
+        
 
     def run(self):
         rospy.spin()

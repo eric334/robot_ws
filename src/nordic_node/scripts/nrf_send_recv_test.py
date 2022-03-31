@@ -13,11 +13,11 @@ serial = Serial(dev, timeout=1, baudrate=baud)
 serial.close()
 serial.open()
 
-serial.write("t".encode())
-
-while True:
-    bytesToRead = serial.inWaiting()
+for i in range(10):
+    string = "test" + str(i)
+    serial.write(string.encode())
+    bytesToRead = 0
+    while bytesToRead == 0:
+        bytesToRead = serial.inWaiting()
     data = serial.read(bytesToRead)
-    if (bytesToRead > 0):
-        print(bytesToRead)
-        print(data)
+    print(data)
