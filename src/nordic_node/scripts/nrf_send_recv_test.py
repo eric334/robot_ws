@@ -14,15 +14,16 @@ serial = Serial(dev, timeout=1, baudrate=baud)
 serial.close()
 serial.open()
 
-for i in range(10):
-    string = "test" + str(i)
-    print("send: " + string)
-    serial.write("0010".encode())
-    bytesToRead = 0
-    while bytesToRead == 0:
-        bytesToRead = serial.inWaiting()
-    data = serial.read(bytesToRead)
-    print(data)
+
+# for i in range(10):
+#     # string = "test" + str(i)
+#     # print("send: " + string)
+#     # serial.write("0010".encode())
+#     # bytesToRead = 0
+#     # while bytesToRead == 0:
+#     #     bytesToRead = serial.inWaiting()
+#     # data = serial.read(bytesToRead)
+#     # print(data)
 
 def send_size_then_data(data):
     size = asizeof(data)
@@ -33,19 +34,27 @@ def send_size_then_data(data):
 
     size = str(size).zfill(4)
 
+    print("sending " + size)
+
     serial.write(size.encode())
 
     bytesToRead = 0
     while bytesToRead == 0:
         bytesToRead = serial.inWaiting()
-    data = serial.read(bytesToRead)
-
-    if data == "1":
+    echo = serial.read(bytesToRead)
+    print("echo " + echo)
+    if echo == size:
         serial.write(data)
     else:
-        rospy.logerror("fatal error did not recieve reply")
+        rospy.logerror("fatal error echo is not equivalent")
         return
 
-    
+
+send_size_then_data("quick brown fox jumps over the lazy dog what")
+bytesToRead = 0
+while bytesToRead == 0:
+    bytesToRead = serial.inWaiting()
+echo = serial.read(bytesToRead)
+print("echo: " + echo)
 
     
