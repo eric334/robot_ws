@@ -10,6 +10,7 @@ from sensor_msgs.msg import Joy
 from sensor_msgs.msg import CompressedImage
 from std_msgs.msg import Header
 from serial import Serial, serialutil
+from io import BytesIO
 
 import dynamic_reconfigure.client
 
@@ -53,7 +54,18 @@ class Node:
     
     # modify headers so they are identifiable on the other end
     def callback_camera(self, compressedImage):
-        rospy.loginfo(asizeof(compressedImage))
+        rospy.loginfo("compressed image size: " + str(asizeof(compressedImage)))
+
+        buffer = BytesIO()
+        compressedImage.serialize(buffer)
+
+        # getvalue on python 2.7 , getbuffer on python 3
+        #print(buffer.getvalue())
+
+        rospy.loginfo("buffer size: " + str(len(buffer.getvalue())))
+
+        rospy.loginfo("numpy size: " + str(sys.getsizeof(compressedImage.data)))
+
         self.image_repub.publish(compressedImage)
         self.display_image(compressedImage)
         compressedImage.header.frame_id = "cam"
