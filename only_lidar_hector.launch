@@ -14,6 +14,7 @@
   </node>
   
   <!-- Hector slam -->
-  <include file="src/hector_slam/hector_slam_launch/launch/hector_slam_image.launch"/>\
+  <include file="src/hector_slam/hector_slam_launch/launch/hector_slam_image.launch"/>
     <arg name="scan_topic" value="/scan_filtered"/>
+  </include>
 </launch>
