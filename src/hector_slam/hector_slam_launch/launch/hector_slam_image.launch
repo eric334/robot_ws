@@ -8,6 +8,7 @@
   <param name="/use_sim_time" value="false"/>
 
   <include file="$(find hector_mapping)/launch/mapping_default.launch"/>
+    <arg name ="scan_topic" default="scan"/>
 
   <include file="$(find hector_geotiff_launch)/launch/geotiff_mapper.launch">
     <arg name="trajectory_source_frame_name" value="scanmatcher_frame"/>

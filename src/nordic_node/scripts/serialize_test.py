@@ -11,6 +11,7 @@ from sensor_msgs.msg import CompressedImage
 from io import BytesIO
 from pympler.asizeof import asizeof
 import pickle
+import math
 
 class Node:
     def __init__(self):
@@ -32,18 +33,28 @@ class Node:
 
         print(len(buffer.getvalue()))
 
-        with open("my_file.txt", "wb") as binary_file:
-            
-            binary_file.write(buffer.getvalue()[:])
+        dev = "/dev/ttyACM0"
+        baud = "115200"
 
-        with open("my_file1.txt", "wb") as binary_file:
+        self.serial = Serial(dev, timeout=1, baudrate=baud)
 
-            # Write bytes to file
-            binary_file.write(buffer.getvalue()[:63])
-
-        with open("my_file2.txt", "wb") as binary_file:
-
-            binary_file.write(buffer.getvalue()[63:])
+        self.send_as_chunks(buffer.getvalue())
+    
+    def send_as_chunks(self, data):
+        data = bytes(data)
+        size = asizeof(data)
+        print("Size: " + str(size))
+        chunk_size = 64
+        iterations = int(math.ceil(size / chunk_size))
+        
+        for i in range(iterations):
+            chunk = []
+            if i == iterations - 1:
+                chunk = data[i*8: size(data)]
+            else:
+            chunk = data[i*8: i*8 + 8]
+            print (chunk)
+            self.serial.write(chunk)
 
 def createVector3(list):
     vector = Vector3()

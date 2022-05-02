@@ -37,7 +37,7 @@ class Node:
         #self.serial = Serial(dev, timeout=1, baudrate=baud)
 
         self.sub_camera = rospy.Subscriber(camera_topic, CompressedImage, self.callback_camera)
-        rospy.loginfo("Nordic_send - subscribed to topic :s " + camera_topic)
+        rospy.loginfo("Nordic_send - subscribed to topic : " + camera_topic)
         #self.sub_hector = rospy.Subscriber(hector_topic, CompressedImage, self.callback_hector)
         #rospy.loginfo("Nordic_send - subscribed to topic : " + hector_topic)
 
@@ -69,16 +69,33 @@ class Node:
         self.image_repub.publish(compressedImage)
         self.display_image(compressedImage)
         compressedImage.header.frame_id = "cam"
-        self.write_serial(compressedImage)
+        self.write_serial(buffer.getvalue())
 
     def write_serial(self, data):
-        #self.serial.write(data)
+        self.send_as_chunks(data)
         return
 
     def set_compressedimage_quality(self, topic, quality):
         client = dynamic_reconfigure.client.Client(topic, timeout = 3)
         client.update_configuration({ 'format' : 'jpeg', 'jpeg_quality' : int(quality)})
         return
+
+    def send_as_chunks(self, data):
+        size = len(data)
+        print("Size: " + size)
+        chunk_size = 64
+        iterations = int(math.ceil(size / chunk_size))
+        
+        for i in range(iterations):
+            chunk = []
+            if i < iterations - 1:
+                chunk = data[i*64: i*64 + 63]
+            else:
+                rospy.loginfo("last")
+                chunk = data[i*64: size]
+            self.serial.write(chunk)
+
+
 
 
 

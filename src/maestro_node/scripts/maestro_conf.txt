@@ -10,7 +10,7 @@
   <Channels ServosAvailable="6" ServoPeriod="156">
     <!--Period = 19.968 ms-->
     <!--Channel 0-->
-    <Channel name="" mode="Servo" min="1984" max="9984" homemode="Ignore" home="3968" speed="36" acceleration="0" neutral="6000" range="1905" />
+    <Channel name="" mode="Servo" min="3968" max="8000" homemode="Ignore" home="3968" speed="0" acceleration="0" neutral="6000" range="635" />
     <!--Channel 1-->
     <Channel name="" mode="Servo" min="3968" max="8000" homemode="Off" home="3968" speed="0" acceleration="0" neutral="6000" range="1905" />
     <!--Channel 2-->

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<launch>
+  <!-- Lidar controller -->
+  <include file="src/rplidar_ros/launch/rplidar.launch">
+    <!-- may be USB0 or USB1 depending on maestro?-->
+    <arg name="dev" value="/dev/ttyUSB0"/>
+    <arg name="baud" value="115200"/>
+  </include>
+
+  <!-- Scan filter-->
+  <node pkg="laser_filters" type="scan_to_scan_filter_chain" output="screen" name="laser_filter">
+      <rosparam command="load" file="laser_filter.yaml"  />
+  </node>
+  
+  <!-- Hector slam -->
+  <include file="src/hector_slam/hector_slam_launch/launch/hector_slam_image.launch"/>\
+    <arg name="scan_topic" value="/scan_filtered"/>
+</launch>
