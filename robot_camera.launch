@@ -84,7 +84,7 @@
 
   <!-- USB cam controller -->
   <include file="src/usb_cam/launch/usb_cam.launch">
-    <arg name="dev" value="/dev/video1" />
+    <arg name="dev" value="/dev/video0" />
     <arg name="width" value="176"/>
     <arg name="height" value="144"/>
     <arg name="fps" value="6"/>
