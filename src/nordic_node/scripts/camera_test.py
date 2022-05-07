@@ -58,12 +58,11 @@ class Node:
     
     # modify headers so they are identifiable on the other end
     def callback_camera(self, compressedImage):
-
+        compressedImage.header.frame_id = "cam"
         if not self.didPic:
             self.didPic = True
         else:
             return
-
 
         rospy.loginfo("compressed image size: " + str(asizeof(compressedImage)))
 
