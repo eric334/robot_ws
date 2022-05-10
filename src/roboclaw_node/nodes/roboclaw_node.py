@@ -140,61 +140,67 @@ class Node:
         rospy.init_node("roboclaw_node")
         rospy.on_shutdown(self.shutdown)
         rospy.loginfo("Connecting to roboclaw")
-        dev_name = rospy.get_param("~dev", "/dev/ttyACM0")
-        baud_rate = int(rospy.get_param("~baud", "115200"))
 
-        self.address = int(rospy.get_param("~address", "128"))
-        if self.address > 0x87 or self.address < 0x80:
-            rospy.logfatal("Address out of range")
-            rospy.signal_shutdown("Address out of range")
+        self.enable = rospy.get_param("~enable")
 
-        # TODO need someway to check if address is correct
-        try:
-            roboclaw.Open(dev_name, baud_rate)
-        except Exception as e:
-            rospy.logfatal("Could not connect to Roboclaw")
-            rospy.logdebug(e)
-            rospy.signal_shutdown("Could not connect to Roboclaw")
+        if self.enable:
 
-        self.updater = diagnostic_updater.Updater()
-        self.updater.setHardwareID("Roboclaw")
-        self.updater.add(diagnostic_updater.
-                         FunctionDiagnosticTask("Vitals", self.check_vitals))
+            dev_name = rospy.get_param("~dev", "/dev/ttyACM0")
+            baud_rate = int(rospy.get_param("~baud", "115200"))
 
-        try:
-            version = roboclaw.ReadVersion(self.address)
-        except Exception as e:
-            rospy.logwarn("Problem getting roboclaw version")
-            rospy.logdebug(e)
-            pass
+            self.address = int(rospy.get_param("~address", "128"))
+            if self.address > 0x87 or self.address < 0x80:
+                rospy.logfatal("Address out of range")
+                rospy.signal_shutdown("Address out of range")
 
-        if not version[0]:
-            rospy.logwarn("Could not get version from roboclaw")
-        else:
-            rospy.logdebug(repr(version[1]))
+            # TODO need someway to check if address is correct
+            try:
+                roboclaw.Open(dev_name, baud_rate)
+            except Exception as e:
+                rospy.logfatal("Could not connect to Roboclaw")
+                rospy.logdebug(e)
+                rospy.signal_shutdown("Could not connect to Roboclaw")
 
-        roboclaw.SpeedM1M2(self.address, 0, 0)
-        roboclaw.ResetEncoders(self.address)
+            self.updater = diagnostic_updater.Updater()
+            self.updater.setHardwareID("Roboclaw")
+            self.updater.add(diagnostic_updater.
+                            FunctionDiagnosticTask("Vitals", self.check_vitals))
 
-        self.MAX_SPEED = float(rospy.get_param("~max_speed", "2.0"))
-        self.TICKS_PER_METER = float(rospy.get_param("~tick_per_meter", "4342.2"))
-        self.BASE_WIDTH = float(rospy.get_param("~base_width", "0.315"))
+            try:
+                version = roboclaw.ReadVersion(self.address)
+            except Exception as e:
+                rospy.logwarn("Problem getting roboclaw version")
+                rospy.logdebug(e)
+                pass
 
-        self.encodm = EncoderOdom(self.TICKS_PER_METER, self.BASE_WIDTH)
-        self.last_set_speed_time = rospy.get_rostime()
+            if not version[0]:
+                rospy.logwarn("Could not get version from roboclaw")
+            else:
+                rospy.logdebug(repr(version[1]))
 
-        rospy.Subscriber(rospy.get_param("~subscribed_topic"), Twist, self.cmd_vel_callback)
+            roboclaw.SpeedM1M2(self.address, 0, 0)
+            roboclaw.ResetEncoders(self.address)
 
-        rospy.sleep(1)
+            self.MAX_SPEED = float(rospy.get_param("~max_speed", "2.0"))
+            self.TICKS_PER_METER = float(rospy.get_param("~tick_per_meter", "4342.2"))
+            self.BASE_WIDTH = float(rospy.get_param("~base_width", "0.315"))
 
-        rospy.logdebug("dev %s", dev_name)
-        rospy.logdebug("baud %d", baud_rate)
-        rospy.logdebug("address %d", self.address)
-        rospy.logdebug("max_speed %f", self.MAX_SPEED)
-        rospy.logdebug("ticks_per_meter %f", self.TICKS_PER_METER)
-        rospy.logdebug("base_width %f", self.BASE_WIDTH)
+            self.encodm = EncoderOdom(self.TICKS_PER_METER, self.BASE_WIDTH)
+            self.last_set_speed_time = rospy.get_rostime()
+
+            rospy.logdebug("dev %s", dev_name)
+            rospy.logdebug("baud %d", baud_rate)
+            rospy.logdebug("address %d", self.address)
+            rospy.logdebug("max_speed %f", self.MAX_SPEED)
+            rospy.logdebug("ticks_per_meter %f", self.TICKS_PER_METER)
+            rospy.logdebug("base_width %f", self.BASE_WIDTH)
+
+        rospy.Subscriber(rospy.get_param("~subscribed_topic"), Twist, self.cmd_vel_callback)     
 
     def run(self):
+        if not self.enable:
+            return
+
         rospy.loginfo("Starting motor drive")
         r_time = rospy.Rate(10)
         while not rospy.is_shutdown():
@@ -237,6 +243,9 @@ class Node:
             r_time.sleep()
 
     def cmd_vel_callback(self, twist):
+        if not self.enable:
+            return
+
         self.last_set_speed_time = rospy.get_rostime()
 
         linear_x = twist.linear.x
