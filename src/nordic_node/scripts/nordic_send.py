@@ -30,13 +30,13 @@ class Node:
         jpeg_quality = rospy.get_param("~jpeg_quality_level")
         map_output_topic = rospy.get_param("~map_output_topic")
         
-
         self.image_map_ratio = int(rospy.get_param("~image_map_ratio"))
 
         self.images_sent = 0
         self.camera_image = None
         self.tilemap_image = None
         self.fullmap_image = None
+        self.pose_array = None
 
         self.set_compressedimage_quality(camera_topic, jpeg_quality)
         self.set_compressedimage_quality(tilemap_topic, jpeg_quality)
@@ -57,10 +57,11 @@ class Node:
         rospy.loginfo("Nordic_send - subscribed to topic " + reply_topic)
         self.map_output = rospy.Publisher(map_output_topic, Empty, queue_size = 1)
         rospy.loginfo("Nordic_send - published topic " + map_output_topic)
+        self.pose_topic = rospy.Subscriber(self.map_pose_topic, PoseStamped, self.callback_pose)
+        rospy.loginfo("Nordic_send - published topic " + tilemap_topic)
 
         # initialize loop with remote station
-        self.init_connection = True
-        
+        self.init_connection = True    
 
     def run(self):
         rospy.spin()
@@ -77,13 +78,12 @@ class Node:
 
             self.pub_map_output()
 
-            adjusted_pose = rospy.wait_for_message(self.map_pose_topic, PoseStamped)
             self.fullmap_image = rospy.wait_for_message(self.fullmap_topic, CompressedImage)
             self.fullmap_image.header.frame_id = "full"
 
             # fill header data with adjusted pose data. don't holla at me, I know its janky
             # pid is uint32, so max map coords can be 65535, 65535 but by god I hope the image isn't that large
-            self.fullmap_image.header.pid = np.array([adjusted_pose.pose.x, adjusted_pose.pose.y], dtype = np.uint16)
+            self.fullmap_image.header.pid = self.pose_array
 
             self.send_compressed_image(self.fullmap_image)
 
@@ -98,7 +98,11 @@ class Node:
                     self.pub_map_output()
             else:
                 self.images_sent = 0
+                self.tilemap_image.pid = self.pose_array
                 self.send_compressed_image(self.tilemap_image)
+
+    def callback_pose(self,poseStamped):
+        self.pose_array = np.array([poseStamped.pose.x, poseStamped.pose.y], dtype = np.uint16)
 
     def pub_map_output(self):
         self.map_output.publish(Empty())
@@ -114,6 +118,7 @@ class Node:
             self.callback_reply(self, boolean)
 
     def callback_tilemap(self, compressedImage):
+        compressedImage.header.pid = self.get_pose_array()
         compressedImage.header.frame_id = "tile"
         self.tilemap_image = compressedImage
 

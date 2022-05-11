@@ -117,10 +117,6 @@ public:
 
       adjusted_pose_pub_.publish(adjusted_pose)
 
-
-
-
-
       cv::Mat* map_mat  = &cv_img_full_.image;
 
       // resize cv image if it doesn't have the same dimensions as the map
@@ -172,6 +168,13 @@ public:
       Eigen::Vector2f rob_position_map (world_map_transformer_.getC2Coords(rob_position_world));
 
       Eigen::Vector2i rob_position_mapi (rob_position_map.cast<int>());
+
+      // to line 176 inserts by Eric, publish adjusted int pose position to image map
+      geometry_msgs::PoseStamped adjusted_pose;
+      adjusted_pose.pose.position.x = rob_position_mapi.x();
+      adjusted_pose.pose.position.y = rob_position_mapi.y();
+
+      adjusted_pose_pub_.publish(adjusted_pose)
 
       Eigen::Vector2i tile_size_lower_halfi (p_size_tiled_map_image_x_ / 2, p_size_tiled_map_image_y_ / 2);
 
