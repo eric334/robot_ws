@@ -51,10 +51,6 @@ public:
   MapAsImageProvider()
     : pn_("~")
   {
-    // insert by Eric
-    adjusted_pose_pub_ = node.advertise<geometry_msgs::PoseStamped>("map_image/adjusted_pose", 0);
-
-
 
     image_transport_ = new image_transport::ImageTransport(n_);
     image_transport_publisher_full_ = image_transport_->advertise("map_image/full", 1);
@@ -100,27 +96,7 @@ public:
     }
 
     // Only if someone is subscribed to it, do work and publish full map image
-    if ((image_transport_publisher_full_.getNumSubscribers() > 0)&& (pose_ptr_)){
-
-      // to line 118 inserts by Eric, publish adjusted int pose position to image map
-      geometry_msgs::PoseStamped adjusted_pose;
-
-      world_map_transformer_.setTransforms(*map);
-
-      Eigen::Vector2f rob_position_world (pose_ptr_->pose.position.x, pose_ptr_->pose.position.y);
-      Eigen::Vector2f rob_position_map (world_map_transformer_.getC2Coords(rob_position_world));
-
-      Eigen::Vector2i rob_position_mapi (rob_position_map.cast<int>());
-
-      adjusted_pose.pose.position.x = rob_position_mapi.x();
-      adjusted_pose.pose.position.y = rob_position_mapi.y();
-
-      adjusted_pose_pub_.publish(adjusted_pose)
-
-
-
-
-
+    if (image_transport_publisher_full_.getNumSubscribers() > 0){
       cv::Mat* map_mat  = &cv_img_full_.image;
 
       // resize cv image if it doesn't have the same dimensions as the map
@@ -262,9 +238,6 @@ public:
 
   ros::Subscriber map_sub_;
   ros::Subscriber pose_sub_;
-
-  // insert by Eric
-  ros::Publisher adjusted_pose_pub_;
 
   image_transport::Publisher image_transport_publisher_full_;
   image_transport::Publisher image_transport_publisher_tile_;

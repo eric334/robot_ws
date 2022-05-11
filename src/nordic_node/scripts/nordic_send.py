@@ -2,8 +2,11 @@
 from queue import Empty
 import queue
 import sys
+
+from numpy import dtype
 import rospy
 from geometry_msgs.msg import Twist
+from geometry_msgs.msg import PoseStamped
 from std_msgs.msg import Bool
 from std_msgs.msg import Empty
 from sensor_msgs.msg import Joy
@@ -11,6 +14,7 @@ from sensor_msgs.msg import CompressedImage
 from std_msgs.msg import Header
 from serial import Serial, serialutil
 from io import BytesIO
+import numpy as np
 
 import dynamic_reconfigure.client
 
@@ -20,10 +24,12 @@ class Node:
 
         camera_topic = rospy.get_param("~camera_topic")
         tilemap_topic = rospy.get_param("~tilemap_topic")
+        self.fullmap_topic = rospy.get_param("~fullmap_topic")
+        self.map_pose_topic = rospy.get_param("~map_pose_topic")
         reply_topic = rospy.get_param("~reply_topic")
         jpeg_quality = rospy.get_param("~jpeg_quality_level")
         map_output_topic = rospy.get_param("~map_output_topic")
-        self.fullmap_topic = rospy.get_param("~fullmap_topic")
+        
 
         self.image_map_ratio = int(rospy.get_param("~image_map_ratio"))
 
@@ -51,6 +57,9 @@ class Node:
         rospy.loginfo("Nordic_send - subscribed to topic " + reply_topic)
         self.map_output = rospy.Publisher(map_output_topic, Empty, queue_size = 1)
         rospy.loginfo("Nordic_send - published topic " + map_output_topic)
+
+        # initialize loop with remote station
+        self.init_connection = True
         
 
     def run(self):
@@ -68,8 +77,13 @@ class Node:
 
             self.pub_map_output()
 
+            adjusted_pose = rospy.wait_for_message(self.map_pose_topic, PoseStamped)
             self.fullmap_image = rospy.wait_for_message(self.fullmap_topic, CompressedImage)
             self.fullmap_image.header.frame_id = "full"
+
+            # fill header data with adjusted pose data. don't holla at me, I know its janky
+            # pid is uint32, so max map coords can be 65535, 65535 but by god I hope the image isn't that large
+            self.fullmap_image.header.pid = np.array([adjusted_pose.pose.x, adjusted_pose.pose.y], dtype = np.uint16)
 
             self.send_compressed_image(self.fullmap_image)
 
@@ -92,6 +106,12 @@ class Node:
     def callback_camera(self, compressedImage):
         compressedImage.header.frame_id = "cam"
         self.camera_image = compressedImage
+
+        if self.init_connection:
+            self.init_connection = False
+            boolean = Bool()
+            boolean.data = False
+            self.callback_reply(self, boolean)
 
     def callback_tilemap(self, compressedImage):
         compressedImage.header.frame_id = "tile"

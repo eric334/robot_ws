@@ -11,10 +11,10 @@
     <arg name="camera_topic" value="/usb_cam/image_raw/compressed"/>
     <arg name="tilemap_topic" value="/map_image/tile/compressed"/>
 	<arg name="fullmap_topic" value="/map_image/full/compressed"/>
-    <arg name="map_output_topic" value="/send_map"/>
 	<arg name="reply_topic" value="/nordic/send_reply"/>
-    <arg name="maestro_topic" value="command/twist"/>
-    <arg name="roboclaw_topic" value="command/deploy"/>
+    <arg name="map_output_topic" value="/send_map"/>
+    <arg name="maestro_topic" value="/command/twist"/>
+    <arg name="roboclaw_topic" value="/command/deploy"/>
     <arg name="jpeg_quality_level" value="40"/>
   </include>
 
@@ -35,7 +35,6 @@
 
   <!-- USB cam controller -->
   <include file="src/usb_cam/launch/usb_cam.launch">
-    <arg name="enable" value="true"/>
     <arg name="dev" value="/dev/video1" />
     <arg name="width" value="320"/>
     <arg name="height" value="240"/>
@@ -44,7 +43,6 @@
 
   <!-- Lidar controller -->
   <include file="src/rplidar_ros/launch/rplidar.launch">
-    <arg name="enable" value="false"/>
     <!-- may be USB0 or USB1 depending on maestro?-->
     <arg name="dev" value="/dev/ttyUSB0"/>
     <arg name="baud" value="115200"/>

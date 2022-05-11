@@ -20,7 +20,7 @@
   </include>
 
   <node pkg="hector_compressed_map_transport" type="map_to_image_node" name="map_to_image_node">
-    <remap from="/map" to="$(arg geotiff_map_file_path)"/>
+    <remap from="/map" to="$(arg map_image_topic)"/>
   </node>
 
 </launch>
