@@ -26,11 +26,15 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //=================================================================================================
 
+// Thanks very much Stefan, this node is sick
+// Modified by Eric Buckland to control image map output
+
 #include "ros/ros.h"
 
 #include <nav_msgs/GetMap.h>
 #include <geometry_msgs/Quaternion.h>
 #include <geometry_msgs/PoseStamped.h>
+#include <std_msgs/Bool.h>
 #include <sensor_msgs/image_encodings.h>
 
 #include <cv_bridge/cv_bridge.h>
@@ -52,9 +56,9 @@ public:
     : pn_("~")
   {
     // insert by Eric
-    adjusted_pose_pub_ = node.advertise<geometry_msgs::PoseStamped>("map_image/adjusted_pose", 0);
+    adjusted_pose_pub_ = n_.advertise<geometry_msgs::PoseStamped>("map_image/adjusted_pose", 0);
 
-
+    map_boolean_sub_ = n_.subscribe("render_map", 1, &MapAsImageProvider::mapBoolCallback, this); 
 
     image_transport_ = new image_transport::ImageTransport(n_);
     image_transport_publisher_full_ = image_transport_->advertise("map_image/full", 1);
@@ -88,9 +92,15 @@ public:
     pose_ptr_ = pose;
   }
 
+  void mapCallback(const nav_msgs::OccupancyGridConstPtr& map) {
+    map_ptr_ = map;
+  }
+
   //The map->image conversion runs every time a new map is received at the moment
-  void mapCallback(const nav_msgs::OccupancyGridConstPtr& map)
+  void mapBoolCallback(const std_msgs::BoolPtr& mapType)
   {
+    const nav_msgs::OccupancyGridConstPtr& map = map_ptr_;
+  
     int size_x = map->info.width;
     int size_y = map->info.height;
 
@@ -99,8 +109,8 @@ public:
       return;
     }
 
-    // Only if someone is subscribed to it, do work and publish full map image
-    if ((image_transport_publisher_full_.getNumSubscribers() > 0)&& (pose_ptr_)){
+    // if true, do full maptype
+    if (mapType->data) {
 
       // to line 118 inserts by Eric, publish adjusted int pose position to image map
       geometry_msgs::PoseStamped adjusted_pose;
@@ -115,7 +125,7 @@ public:
       adjusted_pose.pose.position.x = rob_position_mapi.x();
       adjusted_pose.pose.position.y = rob_position_mapi.y();
 
-      adjusted_pose_pub_.publish(adjusted_pose)
+      adjusted_pose_pub_.publish(adjusted_pose);
 
       cv::Mat* map_mat  = &cv_img_full_.image;
 
@@ -159,8 +169,8 @@ public:
       image_transport_publisher_full_.publish(cv_img_full_.toImageMsg());
     }
 
-    // Only if someone is subscribed to it, do work and publish tile-based map image Also check if pose_ptr_ is valid
-    if ((image_transport_publisher_tile_.getNumSubscribers() > 0) && (pose_ptr_)){
+    // if false, do tilemap
+    else {
 
       world_map_transformer_.setTransforms(*map);
 
@@ -174,7 +184,7 @@ public:
       adjusted_pose.pose.position.x = rob_position_mapi.x();
       adjusted_pose.pose.position.y = rob_position_mapi.y();
 
-      adjusted_pose_pub_.publish(adjusted_pose)
+      adjusted_pose_pub_.publish(adjusted_pose);
 
       Eigen::Vector2i tile_size_lower_halfi (p_size_tiled_map_image_x_ / 2, p_size_tiled_map_image_y_ / 2);
 
@@ -267,7 +277,9 @@ public:
   ros::Subscriber pose_sub_;
 
   // insert by Eric
+  ros::Subscriber map_boolean_sub_;
   ros::Publisher adjusted_pose_pub_;
+  nav_msgs::OccupancyGridConstPtr map_ptr_;
 
   image_transport::Publisher image_transport_publisher_full_;
   image_transport::Publisher image_transport_publisher_tile_;

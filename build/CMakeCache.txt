@@ -542,6 +542,12 @@ main_node_BINARY_DIR:STATIC=/home/nvidia/robot_ws/build/joy_node
 //Value Computed by CMake
 main_node_SOURCE_DIR:STATIC=/home/nvidia/robot_ws/src/joy_node
 
+//Value Computed by CMake
+map_control_node_BINARY_DIR:STATIC=/home/nvidia/robot_ws/build/map_control_node
+
+//Value Computed by CMake
+map_control_node_SOURCE_DIR:STATIC=/home/nvidia/robot_ws/src/map_control_node
+
 //The directory containing a CMake configuration file for message_filters.
 message_filters_DIR:PATH=/opt/ros/kinetic/share/message_filters/cmake
 

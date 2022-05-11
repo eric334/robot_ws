@@ -15,6 +15,8 @@ geometry_msgs/Quaternion.h
 -
 geometry_msgs/PoseStamped.h
 -
+std_msgs/Bool.h
+-
 sensor_msgs/image_encodings.h
 -
 cv_bridge/cv_bridge.h
@@ -2322,6 +2324,22 @@ cstdlib
 stdexcept
 -
 string
+-
+
+/opt/ros/kinetic/include/std_msgs/Bool.h
+string
+-
+vector
+-
+map
+-
+ros/types.h
+-
+ros/serialization.h
+-
+ros/builtin_message_traits.h
+-
+ros/message_operations.h
 -
 
 /opt/ros/kinetic/include/std_msgs/Header.h

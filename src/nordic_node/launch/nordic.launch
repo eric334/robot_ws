@@ -6,8 +6,10 @@
     <arg name="tilemap_topic" default="/map_image/tile/compressed"/>
     <arg name="fullmap_topic" default="/map_image/full/compressed"/>
     <arg name="reply_topic" default="/send_reply"/>
-    <arg name="map_output_topic" default="/send_map"/>
+    <arg name="render_map_topic" default="/render_map"/>
     <arg name="jpeg_quality_level" default="40"/>
+
+    <arg name="image_map_ratio" default="5"/>
 
     <arg name="maestro_topic" default="recv_data_maestro"/>
     <arg name="roboclaw_topic" default="recv_data_roboclaw"/>
@@ -25,8 +27,9 @@
         <param name="~fullmap_topic" value="$(arg fullmap_topic)"/>
         <param name="~reply_topic" value="$(arg reply_topic)"/>
         <param name="~jpeg_quality_level" value="$(arg jpeg_quality_level)"/>
-        <param name="~map_output_topic" value="$(arg map_output_topic)"/>
+        <param name="~render_map_topic" value="$(arg render_map_topic)"/>
         <param name="~map_pose_topic" value= "$(arg map_pose_topic)"/>
+        <param name="~image_map_ratio" value= "$(arg image_map_ratio)"/>
     </node>
 
     <node pkg="nordic_node" type="nordic_recv.py" name="nordic_recv" output="screen">

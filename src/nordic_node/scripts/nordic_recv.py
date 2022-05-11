@@ -25,11 +25,11 @@ class Node:
             rospy.loginfo("Nordic_recv - opening serial : " + self.dev)
             self.serial = Serial(self.dev, timeout=1, baudrate=self.baud)
 
-        self.pub_maestro = rospy.Publisher(maestro_topic, Empty)
+        self.pub_maestro = rospy.Publisher(maestro_topic, Empty, queue_size =1)
         rospy.loginfo("Nordic_recv - published topic : " + maestro_topic)
-        self.pub_roboclaw = rospy.Publisher(roboclaw_topic, Twist)
+        self.pub_roboclaw = rospy.Publisher(roboclaw_topic, Twist, queue_size=1)
         rospy.loginfo("Nordic_recv - published topic : " + roboclaw_topic)
-        self.pub_reply = rospy.Publisher(reply_topic, Bool)
+        self.pub_reply = rospy.Publisher(reply_topic, Bool, queue_size=1)
         rospy.loginfo("Nordic_recv - published topic : " + reply_topic)
 
 

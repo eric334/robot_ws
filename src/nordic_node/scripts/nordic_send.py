@@ -28,7 +28,7 @@ class Node:
         self.map_pose_topic = rospy.get_param("~map_pose_topic")
         reply_topic = rospy.get_param("~reply_topic")
         jpeg_quality = rospy.get_param("~jpeg_quality_level")
-        map_output_topic = rospy.get_param("~map_output_topic")
+        render_map_topic = rospy.get_param("~render_map_topic")
         
         self.image_map_ratio = int(rospy.get_param("~image_map_ratio"))
 
@@ -51,14 +51,17 @@ class Node:
 
         self.sub_camera = rospy.Subscriber(camera_topic, CompressedImage, self.callback_camera)
         rospy.loginfo("Nordic_send - subscribed to topic " + camera_topic)
-        self.sub_tile = rospy.Subscriber(tilemap_topic, CompressedImage, self.callback_hector)
+        self.sub_tile = rospy.Subscriber(tilemap_topic, CompressedImage, self.callback_tilemap)
         rospy.loginfo("Nordic_send - subscribed to topic " + tilemap_topic)
         self.send_reply = rospy.Subscriber(reply_topic, Bool, self.callback_reply)
         rospy.loginfo("Nordic_send - subscribed to topic " + reply_topic)
-        self.map_output = rospy.Publisher(map_output_topic, Empty, queue_size = 1)
-        rospy.loginfo("Nordic_send - published topic " + map_output_topic)
+        self.render_map = rospy.Publisher(render_map_topic, Bool, queue_size = 1)
+        rospy.loginfo("Nordic_send - published topic " + render_map_topic)
         self.pose_topic = rospy.Subscriber(self.map_pose_topic, PoseStamped, self.callback_pose)
-        rospy.loginfo("Nordic_send - published topic " + tilemap_topic)
+        rospy.loginfo("Nordic_send - published topic " + self.map_pose_topic)
+
+        # USE ONLY FOR RQT_GRAPH VISUALIZATION, WILL CAUSE FULL RENDERS ALL THE TIME
+        self.pose_topic = rospy.Subscriber(self.fullmap_topic, CompressedImage, None)
 
         # initialize loop with remote station
         self.init_connection = True    
@@ -74,9 +77,9 @@ class Node:
             # render full map starting now
             # subscribed and unsubscribe so that the full map is not always rendered
             sub_fullmap = rospy.Subscriber(self.fullmap_topic, CompressedImage, self.callback_fullmap)
-            rospy.loginfo("Nordic_send - subscribed to topic " + self.tilemap_topic)
+            rospy.loginfo("Nordic_send - subscribed to topic " + self.fullmap_topic)
 
-            self.pub_map_output()
+            self.render_map.publish(boolean)
 
             self.fullmap_image = rospy.wait_for_message(self.fullmap_topic, CompressedImage)
             self.fullmap_image.header.frame_id = "full"
@@ -95,17 +98,14 @@ class Node:
                 self.images_sent += 1
                 if self.images_sent == self.image_map_ratio:
                     # render the tilemap for the next time around
-                    self.pub_map_output()
+                    self.render_map.publish(boolean)
             else:
                 self.images_sent = 0
                 self.tilemap_image.pid = self.pose_array
                 self.send_compressed_image(self.tilemap_image)
 
     def callback_pose(self,poseStamped):
-        self.pose_array = np.array([poseStamped.pose.x, poseStamped.pose.y], dtype = np.uint16)
-
-    def pub_map_output(self):
-        self.map_output.publish(Empty())
+        self.pose_array = np.array([poseStamped.pose.position.x, poseStamped.pose.position.y], dtype = np.uint16)
 
     def callback_camera(self, compressedImage):
         compressedImage.header.frame_id = "cam"
@@ -115,10 +115,10 @@ class Node:
             self.init_connection = False
             boolean = Bool()
             boolean.data = False
-            self.callback_reply(self, boolean)
+            self.callback_reply(boolean)
 
     def callback_tilemap(self, compressedImage):
-        compressedImage.header.pid = self.get_pose_array()
+        compressedImage.header.seq = self.pose_array
         compressedImage.header.frame_id = "tile"
         self.tilemap_image = compressedImage
 

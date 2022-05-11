@@ -215,6 +215,7 @@ hector_slam/hector_compressed_map_transport/CMakeFiles/map_to_image_node.dir/src
 hector_slam/hector_compressed_map_transport/CMakeFiles/map_to_image_node.dir/src/map_to_image_node.cpp.o: /opt/ros/kinetic/include/sensor_msgs/Image.h
 hector_slam/hector_compressed_map_transport/CMakeFiles/map_to_image_node.dir/src/map_to_image_node.cpp.o: /opt/ros/kinetic/include/sensor_msgs/RegionOfInterest.h
 hector_slam/hector_compressed_map_transport/CMakeFiles/map_to_image_node.dir/src/map_to_image_node.cpp.o: /opt/ros/kinetic/include/sensor_msgs/image_encodings.h
+hector_slam/hector_compressed_map_transport/CMakeFiles/map_to_image_node.dir/src/map_to_image_node.cpp.o: /opt/ros/kinetic/include/std_msgs/Bool.h
 hector_slam/hector_compressed_map_transport/CMakeFiles/map_to_image_node.dir/src/map_to_image_node.cpp.o: /opt/ros/kinetic/include/std_msgs/Header.h
 hector_slam/hector_compressed_map_transport/CMakeFiles/map_to_image_node.dir/src/map_to_image_node.cpp.o: /opt/ros/kinetic/include/xmlrpcpp/XmlRpcDecl.h
 hector_slam/hector_compressed_map_transport/CMakeFiles/map_to_image_node.dir/src/map_to_image_node.cpp.o: /opt/ros/kinetic/include/xmlrpcpp/XmlRpcValue.h

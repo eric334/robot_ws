@@ -12,10 +12,11 @@
     <arg name="tilemap_topic" value="/map_image/tile/compressed"/>
 	<arg name="fullmap_topic" value="/map_image/full/compressed"/>
 	<arg name="reply_topic" value="/nordic/send_reply"/>
-    <arg name="map_output_topic" value="/send_map"/>
-    <arg name="maestro_topic" value="/command/twist"/>
-    <arg name="roboclaw_topic" value="/command/deploy"/>
+    <arg name="render_map_topic" value="/render_map"/>
+    <arg name="maestro_topic" value="/command/deploy"/>
+    <arg name="roboclaw_topic" value="/command/twist"/>
     <arg name="jpeg_quality_level" value="40"/>
+	<arg name="image_map_ratio" default="5"/>
   </include>
 
   <!-- Roboclaw motor controller -->
@@ -46,25 +47,22 @@
     <!-- may be USB0 or USB1 depending on maestro?-->
     <arg name="dev" value="/dev/ttyUSB0"/>
     <arg name="baud" value="115200"/>
+	<arg name="scan_topic" value="/scan/scan"/>
   </include>
   
   <!-- Scan filter-->
   <node pkg="laser_filters" type="scan_to_scan_filter_chain" output="screen" name="laser_filter">
     <rosparam command="load" file="laser_filter.yaml"  />
+	<remap from="scan" to="/scan/scan"/>
+	<remap from="scan_filtered" to="/scan/filtered"/>
   </node>
   
   <!-- Hector slam -->
-  <include file="src/hector_slam/hector_slam_launch/launch/hector_slam_image.launch"/>
-    <arg name="topic" value="/scan/filtered"/>
-	<arg name="map_image_topic" value="/map/controlled"/>
+  <include file="src/hector_slam/hector_slam_launch/launch/hector_slam_image.launch">
+    <arg name="scan_topic" value="/scan/filtered"/>
+	<arg name="map_topic" value="/map"/>
   </include>
 
-  <!-- Map Control Node -->
-  <include file="src/map_control_node/launch/map_control.launch">
-    <arg name="map_sub_topic" value="/map"/>
-    <arg name="map_pub_topic" value="/map/controlled"/>
-    <arg name="map_output_topic" value="send_map"/>
-  </include>
 </launch>
 
 <!--
