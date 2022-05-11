@@ -2,7 +2,7 @@
 from queue import Empty
 import queue
 import sys
-
+import struct
 from numpy import dtype
 import rospy
 from geometry_msgs.msg import Twist
@@ -24,8 +24,8 @@ class Node:
 
         camera_topic = rospy.get_param("~camera_topic")
         tilemap_topic = rospy.get_param("~tilemap_topic")
-        self.fullmap_topic = rospy.get_param("~fullmap_topic")
-        self.map_pose_topic = rospy.get_param("~map_pose_topic")
+        fullmap_topic = rospy.get_param("~fullmap_topic")
+        map_pose_topic = rospy.get_param("~map_pose_topic")
         reply_topic = rospy.get_param("~reply_topic")
         jpeg_quality = rospy.get_param("~jpeg_quality_level")
         render_map_topic = rospy.get_param("~render_map_topic")
@@ -36,11 +36,11 @@ class Node:
         self.camera_image = None
         self.tilemap_image = None
         self.fullmap_image = None
-        self.pose_array = None
+        self.pose_array = 0
 
         self.set_compressedimage_quality(camera_topic, jpeg_quality)
         self.set_compressedimage_quality(tilemap_topic, jpeg_quality)
-        self.set_compressedimage_quality(self.fullmap_topic, jpeg_quality)
+        self.set_compressedimage_quality(fullmap_topic, jpeg_quality)
 
         self.dev = rospy.get_param("~dev", "/dev/ttyACM0")
         self.baud = int(rospy.get_param("~baud", "115200"))
@@ -61,11 +61,11 @@ class Node:
         self.pub_render = rospy.Publisher(render_map_topic, Bool, queue_size = 1)
         rospy.loginfo("Nordic_send - published topic " + render_map_topic)
         
-        self.sub_pose = rospy.Subscriber(self.map_pose_topic, PoseStamped, self.callback_pose)
-        rospy.loginfo("Nordic_send - subscribed to topic " + self.map_pose_topic)
+        self.sub_pose = rospy.Subscriber(map_pose_topic, PoseStamped, self.callback_pose)
+        rospy.loginfo("Nordic_send - subscribed to topic " + map_pose_topic)
 
-        self.sub_fullmap = rospy.Subscriber(self.fullmap_topic, CompressedImage, self.callback_fullmap)
-        rospy.loginfo("Nordic_send - subscribed to topic " + self.fullmap_topic)
+        self.sub_fullmap = rospy.Subscriber(fullmap_topic, CompressedImage, self.callback_fullmap)
+        rospy.loginfo("Nordic_send - subscribed to topic " + fullmap_topic)
 
         # initialize loop with remote station
         self.init_connection = True    
@@ -75,11 +75,13 @@ class Node:
 
     # pickup from callback_reply
     def callback_fullmap(self, fullmap_image):
+        rospy.loginfo("Nordic_send - sending fullmap image")
+
         fullmap_image.header.frame_id = "full"
 
         # fill header data with adjusted pose data. don't holla at me, I know its janky
-        # pid is uint32, so max map coords can be 65535, 65535 but by god I hope the image isn't that large
-        fullmap_image.header.pid = self.pose_array
+        # seq is uint32, so max map coords can be 65535, 65535 but by god I hope the image isn't that large
+        fullmap_image.header.seq = self.pose_array
 
         send_compressed_image(fullmap_image)
 
@@ -88,26 +90,35 @@ class Node:
         if boolean.data:
             # initialize node deployment
             self.send_node_init()
-            self.render_map.publish(boolean)
+            self.pub_render.publish(boolean)
             # this will pick up on callback
-            
+
         else:
             if self.images_sent < self.image_map_ratio:
+                rospy.loginfo("Nordic_send - sending camera image")
                 self.send_compressed_image(self.camera_image)
                 self.images_sent += 1
                 if self.images_sent == self.image_map_ratio:
                     # render the tilemap for the next time around
-                    self.render_map.publish(boolean)
+                    self.pub_render.publish(boolean)
             else:
+                rospy.loginfo("Nordic_send - sending tilemap image")
                 self.images_sent = 0
-                self.tilemap_image.pid = self.pose_array
+                self.tilemap_image.header.seq = self.pose_array
                 self.send_compressed_image(self.tilemap_image)
 
     def callback_pose(self,poseStamped):
-        self.pose_array = np.array([poseStamped.pose.position.x, poseStamped.pose.position.y], dtype = np.uint16)
+        array = np.array([poseStamped.pose.position.x, poseStamped.pose.position.y], dtype = np.uint16)
+        print(bytes(array))
+        print(array)
+        array = array.astype(np.uint32)
+        print(array)
+        print(bytes(array))
+        self.pose_array = array[0]
 
     def callback_camera(self, compressedImage):
         compressedImage.header.frame_id = "cam"
+        compressedImage.header.seq = 0
         self.camera_image = compressedImage
 
         if self.init_connection:
@@ -117,7 +128,6 @@ class Node:
             self.callback_reply(boolean)
 
     def callback_tilemap(self, compressedImage):
-        compressedImage.header.seq = self.pose_array
         compressedImage.header.frame_id = "tile"
         self.tilemap_image = compressedImage
 
@@ -127,6 +137,7 @@ class Node:
 
     def write_serial(self, compressedImage):
         buffer = BytesIO()
+        print(compressedImage.header.seq)
         compressedImage.serialize(buffer)
         self.send_as_chunks(buffer.getvalue())
 

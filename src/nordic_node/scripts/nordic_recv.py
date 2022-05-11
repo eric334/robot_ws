@@ -13,6 +13,7 @@ import sys
 class Node:
     def __init__(self):
         self.enable = rospy.get_param("~enable")
+        self.enable_reply_ticks = rospy.get_param("~enable_reply_ticks")
 
         maestro_topic = rospy.get_param("~maestro_topic")
         roboclaw_topic = rospy.get_param("~roboclaw_topic")
@@ -34,10 +35,39 @@ class Node:
         self.pub_reply = rospy.Publisher(reply_topic, Bool, queue_size=1)
         rospy.loginfo("Nordic_recv - published topic : " + reply_topic)
 
-
     def run(self):
         if not self.enable:
             rospy.spin()
+
+        # this is for debugging
+        if self.enable_reply_ticks:
+            rate = rospy.Rate(.5)
+
+            while not rospy.is_shutdown():
+
+                twistStamped = TwistStamped()
+
+                twistStamped.header.frame_id = "con"
+
+                boolean = Bool()
+                boolean.data = False
+                if twistStamped.header.frame_id == "con":
+                    self.pub_roboclaw.publish(twistStamped.twist)
+                elif twistStamped.header.frame_id == "condep":
+                    # deploy node
+                    boolean.data = True
+                    self.pub_roboclaw.publish(Twist())
+                    self.pub_maestro.publish(Empty())
+                else:
+                    rospy.logerr("Unrecognized frame id found: "+ twistStamped.header.frame_id)
+
+                # initiate send back message
+                self.pub_reply.publish(boolean)
+
+                rospy.loginfo("Nordic_recv - sending simulated reply request")
+
+                rate.sleep()
+            
 
         #rate = rospy.Rate(100)
 
