@@ -9,9 +9,12 @@
     <arg name="dev" value="/dev/ttyACM0"/>
     <arg name="baud" value="115200"/>
     <arg name="camera_topic" value="/usb_cam/image_raw/compressed"/>
-    <arg name="hector_topic" value="/map_image/tile/compressed"/>
-    <arg name="maestro_topic" value="recv_data_maestro"/>
-    <arg name="roboclaw_topic" value="recv_data_roboclaw"/>
+    <arg name="tilemap_topic" value="/map_image/tile/compressed"/>
+	<arg name="fullmap_topic" value="/map_image/full/compressed"/>
+    <arg name="map_output_topic" value="/send_map"/>
+	<arg name="reply_topic" value="/nordic/send_reply"/>
+    <arg name="maestro_topic" value="command/twist"/>
+    <arg name="roboclaw_topic" value="command/deploy"/>
     <arg name="jpeg_quality_level" value="40"/>
   </include>
 
@@ -21,13 +24,13 @@
     <arg name="dev" value="/dev/ttyACM0"/>
     <arg name="baud" value="115200"/>
     <arg name="max_speed" value="2.0"/>
-    <arg name="subscribed_topic" value="/nordic_node/recv_data_roboclaw"/>
+    <arg name="subscribed_topic" value="command/twist"/>
   </include>
 
   <!-- Maestro motor controller -->
   <include file="src/maestro_node/launch/maestro.launch">
     <!-- does not require dev spec as using driver?-->
-    <arg name="subscribed_topic" value="/nordic_node/recv_data_maestro"/>
+    <arg name="subscribed_topic" value="command/deploy"/>
   </include>
 
   <!-- USB cam controller -->
@@ -54,7 +57,15 @@
   
   <!-- Hector slam -->
   <include file="src/hector_slam/hector_slam_launch/launch/hector_slam_image.launch"/>
-    <arg name="topic" value="/scan_filtered"/>
+    <arg name="topic" value="/scan/filtered"/>
+	<arg name="map_image_topic" value="/map/controlled"/>
+  </include>
+
+  <!-- Map Control Node -->
+  <include file="src/map_control_node/launch/map_control.launch">
+    <arg name="map_sub_topic" value="/map"/>
+    <arg name="map_pub_topic" value="/map/controlled"/>
+    <arg name="map_output_topic" value="send_map"/>
   </include>
 </launch>
 

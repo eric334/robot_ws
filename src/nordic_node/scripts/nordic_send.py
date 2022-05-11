@@ -1,11 +1,16 @@
 #!/usr/bin/env python
+from queue import Empty
+import queue
 import sys
 import rospy
 from geometry_msgs.msg import Twist
+from std_msgs.msg import Bool
+from std_msgs.msg import Empty
 from sensor_msgs.msg import Joy
 from sensor_msgs.msg import CompressedImage
 from std_msgs.msg import Header
 from serial import Serial, serialutil
+from io import BytesIO
 
 import dynamic_reconfigure.client
 
@@ -14,43 +19,92 @@ class Node:
         self.enable = rospy.get_param("~enable")
 
         camera_topic = rospy.get_param("~camera_topic")
-        hector_topic = rospy.get_param("~hector_topic")
+        tilemap_topic = rospy.get_param("~tilemap_topic")
+        reply_topic = rospy.get_param("~reply_topic")
         jpeg_quality = rospy.get_param("~jpeg_quality_level")
+        map_output_topic = rospy.get_param("~map_output_topic")
+        self.fullmap_topic = rospy.get_param("~fullmap_topic")
+
+        self.image_map_ratio = int(rospy.get_param("~image_map_ratio"))
+
+        self.images_sent = 0
+        self.camera_image = None
+        self.tilemap_image = None
+        self.fullmap_image = None
 
         self.set_compressedimage_quality(camera_topic, jpeg_quality)
-        self.set_compressedimage_quality(hector_topic, jpeg_quality)
+        self.set_compressedimage_quality(tilemap_topic, jpeg_quality)
+        self.set_compressedimage_quality(self.fullmap_topic, jpeg_quality)
 
         self.dev = rospy.get_param("~dev", "/dev/ttyACM0")
         self.baud = int(rospy.get_param("~baud", "115200"))
 
         if self.enable:
-            rospy.loginfo("Nordic_send - opening serial : " + self.dev)
+            rospy.loginfo("Nordic_send - opening serial " + self.dev)
             self.serial = Serial(self.dev, timeout=1, baudrate=self.baud)
 
         self.sub_camera = rospy.Subscriber(camera_topic, CompressedImage, self.callback_camera)
-        rospy.loginfo("Nordic_send subscribed to topic : " + camera_topic)
-        self.sub_hector = rospy.Subscriber(hector_topic, CompressedImage, self.callback_hector)
-        rospy.loginfo("Nordic_send subscribed to topic : " + hector_topic)
+        rospy.loginfo("Nordic_send - subscribed to topic " + camera_topic)
+        self.sub_tile = rospy.Subscriber(tilemap_topic, CompressedImage, self.callback_hector)
+        rospy.loginfo("Nordic_send - subscribed to topic " + tilemap_topic)
+        self.send_reply = rospy.Subscriber(reply_topic, Bool, self.callback_reply)
+        rospy.loginfo("Nordic_send - subscribed to topic " + reply_topic)
+        self.map_output = rospy.Publisher(map_output_topic, Empty, queue_size = 1)
+        rospy.loginfo("Nordic_send - published topic " + map_output_topic)
+        
 
     def run(self):
         rospy.spin()
 
-    def callback_hector(self, compressedImage):
-        if self.enable:
-            compressedImage.header.frame_id = "hec"
-            self.write_serial(compressedImage)
+    def callback_reply(self, boolean):
+        # deploy node
+        if boolean.data:
+            # initialize node deployment
+            self.send_node_init()
+            # render full map starting now
+            # subscribed and unsubscribe so that the full map is not always rendered
+            sub_fullmap = rospy.Subscriber(self.fullmap_topic, CompressedImage, self.callback_fullmap)
+            rospy.loginfo("Nordic_send - subscribed to topic " + self.tilemap_topic)
+
+            self.pub_map_output()
+
+            self.fullmap_image = rospy.wait_for_message(self.fullmap_topic, CompressedImage)
+            self.fullmap_image.header.frame_id = "full"
+
+            self.send_compressed_image(self.fullmap_image)
+
+            rospy.loginfo("Nordic_send - unsubscribed from topic " + self.tilemap_topic)
+            sub_fullmap.shutdown()
+        else:
+            if self.images_sent < self.image_map_ratio:
+                self.send_compressed_image(self.camera_image)
+                self.images_sent += 1
+                if self.images_sent == self.image_map_ratio:
+                    # render the tilemap for the next time around
+                    self.pub_map_output()
+            else:
+                self.images_sent = 0
+                self.send_compressed_image(self.tilemap_image)
+
+    def pub_map_output(self):
+        self.map_output.publish(Empty())
 
     def callback_camera(self, compressedImage):
+        compressedImage.header.frame_id = "cam"
+        self.camera_image = compressedImage
+
+    def callback_tilemap(self, compressedImage):
+        compressedImage.header.frame_id = "tile"
+        self.tilemap_image = compressedImage
+
+    def send_compressed_image(self, compressedImage):
         if self.enable:
-            compressedImage.header.frame_id = "cam"
             self.write_serial(compressedImage)
 
     def write_serial(self, compressedImage):
         buffer = BytesIO()
         compressedImage.serialize(buffer)
-
         self.send_as_chunks(buffer.getvalue())
-        return
 
     def set_compressedimage_quality(self, topic, quality):
         client = dynamic_reconfigure.client.Client(topic, timeout = 3)

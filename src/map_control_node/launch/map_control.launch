@@ -1,0 +1,11 @@
+<launch>
+    <arg name="map_sub_topic" default="/map"/>
+    <arg name="map_pub_topic" default="/map/controlled"/>
+    <arg name="map_output_topic" default="send_map"/>
+
+    <node pkg="maestro_node" type="maestro_node.py" name="maestro_node" output="screen">
+        <param name="~map_sub_topic" value="$(arg map_sub_topic)"/>
+        <param name="~map_pub_topic" value="$(arg map_pub_topic)"/>
+        <param name="~map_output_topic" value="$(arg map_output_topic)"/>
+    </node>
+</launch>

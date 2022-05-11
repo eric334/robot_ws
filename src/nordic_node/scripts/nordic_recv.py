@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 import rospy
 from geometry_msgs.msg import TwistStamped
+from geometry_msgs.msg import Twist
 from std_msgs.msg import Empty
+from std_msgs.msg import Bool
 from sensor_msgs.msg import Joy
 from serial import Serial, serialutil
 import StringIO
@@ -14,20 +16,27 @@ class Node:
 
         maestro_topic = rospy.get_param("~maestro_topic")
         roboclaw_topic = rospy.get_param("~roboclaw_topic")
+        reply_topic = rospy.get_param("~reply_topic")
 
         self.dev = rospy.get_param("~dev", "/dev/ttyACM0")
         self.baud = int(rospy.get_param("~baud", "115200"))
         
-        rospy.loginfo("Nordic_recv - opening serial : " + self.dev)
-        self.serial = Serial(self.dev, timeout=1, baudrate=self.baud)
+        if self.enable:
+            rospy.loginfo("Nordic_recv - opening serial : " + self.dev)
+            self.serial = Serial(self.dev, timeout=1, baudrate=self.baud)
 
         self.pub_maestro = rospy.Publisher(maestro_topic, Empty)
         rospy.loginfo("Nordic_recv - published topic : " + maestro_topic)
         self.pub_roboclaw = rospy.Publisher(roboclaw_topic, Twist)
         rospy.loginfo("Nordic_recv - published topic : " + roboclaw_topic)
+        self.pub_reply = rospy.Publisher(reply_topic, Bool)
+        rospy.loginfo("Nordic_recv - published topic : " + reply_topic)
 
 
     def run(self):
+        if not self.enable:
+            rospy.spin()
+
         #rate = rospy.Rate(100)
 
         message = b''
@@ -60,21 +69,20 @@ class Node:
 
                 #print(compressedImage)
 
-                if compressedImage.header.frame_id == "con":
-                    self.pub_camera.publish(compressedImage)
-                elif compressedImage.header.frame_id == "condep":
-                    self.pub_hector.publish(compressedImage)
+                boolean = Bool()
+                boolean.data = False
+                if twistStamped.header.frame_id == "con":
+                    self.pub_roboclaw.publish(twistStamped.twist)
+                elif twistStamped.header.frame_id == "condep":
+                    # deploy node
+                    boolean.data = True
+                    self.pub_roboclaw.publish(Twist())
+                    self.pub_maestro.publish(Empty())
                 else:
-                    rospy.logerr("Error: unrecognized frame id found: "+ compressedImage.header.frame_id)
-
-                # get node and pir string from end of end packet
-                num_nodes = int.from_bytes(data[3:4], 'big')
-                pir_string = String()
-                pir_string.data = data[4:4+num_nodes].decode("utf-8")
-                pub_pir_string.publish(pir_string)
+                    rospy.logerr("Unrecognized frame id found: "+ twistStamped.header.frame_id)
 
                 # initiate send back message
-                self.pub_reply.publish(Empty())
+                self.pub_reply.publish(boolean)
 
             elif data != b'':
                 #print(len(data))

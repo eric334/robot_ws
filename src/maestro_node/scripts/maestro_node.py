@@ -17,10 +17,13 @@ class Node:
         rospy.spin()
 
     def callback(self, data):
-        os.system('mono ./UscCmd --servo 0,9984')
-        time.sleep(3)
-        os.system('mono ./UscCmd --servo 0,1984')
-        
+        os.system('mono ./UscCmd --servo 0,1000')
+        time.sleep(2.335)
+        os.system('mono ./UscCmd --servo 0,0')
+        time.sleep(1)
+        os.system('mono ./UscCmd --servo 0,50000')
+        time.sleep(2.35)
+        os.system('mono ./UscCmd --servo 0,0')
 
 if __name__ == '__main__':
     rospy.init_node('maestro_node', anonymous=True)
