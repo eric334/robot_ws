@@ -51,17 +51,21 @@ class Node:
 
         self.sub_camera = rospy.Subscriber(camera_topic, CompressedImage, self.callback_camera)
         rospy.loginfo("Nordic_send - subscribed to topic " + camera_topic)
+        
         self.sub_tile = rospy.Subscriber(tilemap_topic, CompressedImage, self.callback_tilemap)
         rospy.loginfo("Nordic_send - subscribed to topic " + tilemap_topic)
+        
         self.send_reply = rospy.Subscriber(reply_topic, Bool, self.callback_reply)
         rospy.loginfo("Nordic_send - subscribed to topic " + reply_topic)
-        self.render_map = rospy.Publisher(render_map_topic, Bool, queue_size = 1)
+        
+        self.pub_render = rospy.Publisher(render_map_topic, Bool, queue_size = 1)
         rospy.loginfo("Nordic_send - published topic " + render_map_topic)
-        self.pose_topic = rospy.Subscriber(self.map_pose_topic, PoseStamped, self.callback_pose)
-        rospy.loginfo("Nordic_send - published topic " + self.map_pose_topic)
+        
+        self.sub_pose = rospy.Subscriber(self.map_pose_topic, PoseStamped, self.callback_pose)
+        rospy.loginfo("Nordic_send - subscribed to topic " + self.map_pose_topic)
 
-        # USE ONLY FOR RQT_GRAPH VISUALIZATION, WILL CAUSE FULL RENDERS ALL THE TIME
-        self.pose_topic = rospy.Subscriber(self.fullmap_topic, CompressedImage, None)
+        self.sub_fullmap = rospy.Subscriber(self.fullmap_topic, CompressedImage, self.callback_fullmap)
+        rospy.loginfo("Nordic_send - subscribed to topic " + self.fullmap_topic)
 
         # initialize loop with remote station
         self.init_connection = True    
@@ -69,29 +73,24 @@ class Node:
     def run(self):
         rospy.spin()
 
+    # pickup from callback_reply
+    def callback_fullmap(self, fullmap_image):
+        fullmap_image.header.frame_id = "full"
+
+        # fill header data with adjusted pose data. don't holla at me, I know its janky
+        # pid is uint32, so max map coords can be 65535, 65535 but by god I hope the image isn't that large
+        fullmap_image.header.pid = self.pose_array
+
+        send_compressed_image(fullmap_image)
+
     def callback_reply(self, boolean):
         # deploy node
         if boolean.data:
             # initialize node deployment
             self.send_node_init()
-            # render full map starting now
-            # subscribed and unsubscribe so that the full map is not always rendered
-            sub_fullmap = rospy.Subscriber(self.fullmap_topic, CompressedImage, self.callback_fullmap)
-            rospy.loginfo("Nordic_send - subscribed to topic " + self.fullmap_topic)
-
             self.render_map.publish(boolean)
-
-            self.fullmap_image = rospy.wait_for_message(self.fullmap_topic, CompressedImage)
-            self.fullmap_image.header.frame_id = "full"
-
-            # fill header data with adjusted pose data. don't holla at me, I know its janky
-            # pid is uint32, so max map coords can be 65535, 65535 but by god I hope the image isn't that large
-            self.fullmap_image.header.pid = self.pose_array
-
-            self.send_compressed_image(self.fullmap_image)
-
-            rospy.loginfo("Nordic_send - unsubscribed from topic " + self.tilemap_topic)
-            sub_fullmap.shutdown()
+            # this will pick up on callback
+            
         else:
             if self.images_sent < self.image_map_ratio:
                 self.send_compressed_image(self.camera_image)

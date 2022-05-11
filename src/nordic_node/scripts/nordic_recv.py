@@ -27,8 +27,10 @@ class Node:
 
         self.pub_maestro = rospy.Publisher(maestro_topic, Empty, queue_size =1)
         rospy.loginfo("Nordic_recv - published topic : " + maestro_topic)
+        
         self.pub_roboclaw = rospy.Publisher(roboclaw_topic, Twist, queue_size=1)
         rospy.loginfo("Nordic_recv - published topic : " + roboclaw_topic)
+        
         self.pub_reply = rospy.Publisher(reply_topic, Bool, queue_size=1)
         rospy.loginfo("Nordic_recv - published topic : " + reply_topic)
 
