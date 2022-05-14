@@ -16,6 +16,8 @@
 
     <arg name="map_pose_topic" default="map_image/adjusted_pose"/>
 
+    <arg name="direct_server" default="True"/>
+
     <arg name="enable" default="True"/>
     <arg name="enable_reply_ticks" default="False"/>
 
@@ -31,6 +33,7 @@
         <param name="~render_map_topic" value="$(arg render_map_topic)"/>
         <param name="~map_pose_topic" value= "$(arg map_pose_topic)"/>
         <param name="~image_map_ratio" value= "$(arg image_map_ratio)"/>
+        <param name="~direct_server" value="$(arg direct_server)"/>
     </node>
 
     <node pkg="nordic_node" type="nordic_recv.py" name="nordic_recv" output="screen">
@@ -41,6 +44,7 @@
         <param name="~reply_topic" value="$(arg reply_topic)"/>
         <param name="~maestro_topic" value="$(arg maestro_topic)"/>
         <param name="~roboclaw_topic" value="$(arg roboclaw_topic)"/>
+        <param name="~direct_server" value="$(arg direct_server)"/>
     </node>
 
 </launch>

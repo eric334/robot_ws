@@ -6,16 +6,22 @@ from std_msgs.msg import Empty
 from std_msgs.msg import Bool
 from sensor_msgs.msg import Joy
 from serial import Serial, serialutil
-import StringIO
+from io import BytesIO
 import sys
 import binascii
 import struct
 import traceback
+import direct_server as direct_server_
 
 # recieve data messages from nordic, get message type and publish
 class Node:
     def __init__(self):
+        self.direct_server = rospy.get_param("~direct_server")
         self.enable = rospy.get_param("~enable")
+        if self.direct_server:
+            self.enable = False
+            self.direct_server = direct_server_.Connection()
+
         self.enable_reply_ticks = rospy.get_param("~enable_reply_ticks")
 
         maestro_topic = rospy.get_param("~maestro_topic")
@@ -39,6 +45,21 @@ class Node:
         rospy.loginfo("Nordic_recv - published topic : " + reply_topic)
 
     def run(self):
+        boolean = Bool()
+        boolean.data = False
+
+        if self.direct_server:
+            while not rospy.is_shutdown():
+
+                self.pub_reply.publish(boolean)
+
+                data = self.direct_server.recv_data()
+
+                twistStamped = self.deserialize_twist(data)
+
+                boolean.data = self.publish_appropriate(twistStamped)
+
+
         if not self.enable:
             rospy.spin()
 
@@ -47,22 +68,10 @@ class Node:
             rate = rospy.Rate(.5)
 
             while not rospy.is_shutdown():
-
                 twistStamped = TwistStamped()
-
                 twistStamped.header.frame_id = "con"
 
-                boolean = Bool()
-                boolean.data = False
-                if twistStamped.header.frame_id == "con":
-                    self.pub_roboclaw.publish(twistStamped.twist)
-                elif twistStamped.header.frame_id == "condep":
-                    # deploy node
-                    boolean.data = True
-                    self.pub_roboclaw.publish(Twist())
-                    self.pub_maestro.publish(Empty())
-                else:
-                    rospy.logerr("Unrecognized frame id found: "+ twistStamped.header.frame_id)
+                boolean.data = self.publish_appropriate(twistStamped)
 
                 # initiate send back message
                 self.pub_reply.publish(boolean)
@@ -70,12 +79,15 @@ class Node:
                 rospy.loginfo("Nordic_recv - sending simulated reply request")
 
                 rate.sleep()
+            return
             
-
         #rate = rospy.Rate(100)
 
         message = b''
         last_packet = 0
+
+        #initialize connection
+        self.pub_reply.publish(boolean)
 
         while not rospy.is_shutdown():
             bytesToRead = self.serial.inWaiting()
@@ -96,25 +108,12 @@ class Node:
                 message = message[:len(message) - 64 + last_packet]
                 #print("Entire message: \n " + str(binascii.hexlify(message)))
 
-                try:
-                    buffer = BytesIO(message)
-                    twistStamped.deserialize(buffer.getvalue())
-                except:
-                    rospy.logerr("Deserialization of message failed, traceback: \n" + traceback.format_exc())
+
+                twistStamped = self.deserialize_twist(message)
 
                 rospy.loginfo("Nordic_recv - received message : \n" + str(twistStamped))
 
-                boolean = Bool()
-                boolean.data = False
-                if twistStamped.header.frame_id == "con":
-                    self.pub_roboclaw.publish(twistStamped.twist)
-                elif twistStamped.header.frame_id == "condep":
-                    # deploy node
-                    boolean.data = True
-                    self.pub_roboclaw.publish(Twist())
-                    self.pub_maestro.publish(Empty())
-                else:
-                    rospy.logerr("Unrecognized frame id found: "+ twistStamped.header.frame_id)
+                boolean.data = self.publish_appropriate(twistStamped)
 
                 # initiate send back message
                 self.pub_reply.publish(boolean)
@@ -125,6 +124,29 @@ class Node:
                 message += data
             
             # rate.sleep()
+
+    def deserialize_twist(self, message):
+        twistStamped = TwistStamped()
+        try:
+            buffer = BytesIO(message)
+            twistStamped.deserialize(buffer.getvalue())
+        except:
+            rospy.logerr("Deserialization of message failed, traceback: \n" + traceback.format_exc())
+        return twistStamped
+
+    def publish_appropriate(self, twistStamped):
+        boolean = False
+        if twistStamped.header.frame_id == "con":
+            self.pub_roboclaw.publish(twistStamped.twist)
+        elif twistStamped.header.frame_id == "condep":
+            # deploy node
+            boolean = True
+            self.pub_roboclaw.publish(Twist())
+            self.pub_maestro.publish(Empty())
+        else:
+            rospy.logerr("Unrecognized frame id found: "+ twistStamped.header.frame_id)
+        return boolean
+        
 
 
 if __name__ == '__main__':

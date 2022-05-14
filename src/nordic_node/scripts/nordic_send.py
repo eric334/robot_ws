@@ -17,12 +17,17 @@ from io import BytesIO
 import numpy as np
 from ctypes import *
 import binascii
+import direct_server as direct_server_
 
 import dynamic_reconfigure.client
 
 class Node:
     def __init__(self):
+        self.direct_server = rospy.get_param("~direct_server")
         self.enable = rospy.get_param("~enable")
+        if self.direct_server:
+            self.enable = False
+            self.direct_server = direct_server_.Connection()
 
         camera_topic = rospy.get_param("~camera_topic")
         tilemap_topic = rospy.get_param("~tilemap_topic")
@@ -46,8 +51,6 @@ class Node:
 
         self.dev = rospy.get_param("~dev", "/dev/ttyACM0")
         self.baud = int(rospy.get_param("~baud", "115200"))
-
-        self.init_connection = False
 
         self.sent_messages = 0
 
@@ -73,9 +76,6 @@ class Node:
         self.sub_fullmap = rospy.Subscriber(fullmap_topic, CompressedImage, self.callback_fullmap)
         rospy.loginfo("Nordic_send - subscribed to topic " + fullmap_topic)
 
-        # initialize loop with remote station 
-        self.init_connection = True
-
     def run(self):
         rospy.spin()
 
@@ -89,7 +89,7 @@ class Node:
         # seq is uint32, so max map coords can be 65535, 65535 but by god I hope the image isn't that large
         fullmap_image.header.seq = self.pose_array
 
-        send_compressed_image(fullmap_image)
+        self.send_compressed_image(fullmap_image)
 
     def callback_reply(self, boolean):
         # deploy node
@@ -125,12 +125,6 @@ class Node:
         compressedImage.header.seq = 0
         self.camera_image = compressedImage
 
-        if self.init_connection:
-            self.init_connection = False
-            boolean = Bool()
-            boolean.data = False
-            self.callback_reply(boolean)
-
     def callback_tilemap(self, compressedImage):
         compressedImage.header.frame_id = "tile"
         self.tilemap_image = compressedImage
@@ -140,15 +134,17 @@ class Node:
            return
 
         self.sent_messages += 1
+        self.write_buffer(compressedImage)
 
-        if self.enable:
-            self.write_serial(compressedImage)
-
-    def write_serial(self, compressedImage):
+    def write_buffer(self, compressedImage):
         buffer = BytesIO()
         print(compressedImage.header.seq)
         compressedImage.serialize(buffer)
-        self.send_as_chunks(buffer.getvalue())
+
+        if self.enable:
+            self.send_as_chunks(buffer.getvalue())
+        if self.direct_server:
+            self.direct_server.send_data(buffer.getvalue())
 
     def set_compressedimage_quality(self, topic, quality):
         client = dynamic_reconfigure.client.Client(topic, timeout = 3)
