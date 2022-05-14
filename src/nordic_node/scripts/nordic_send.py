@@ -15,6 +15,8 @@ from std_msgs.msg import Header
 from serial import Serial, serialutil
 from io import BytesIO
 import numpy as np
+from ctypes import *
+import binascii
 
 import dynamic_reconfigure.client
 
@@ -45,6 +47,10 @@ class Node:
         self.dev = rospy.get_param("~dev", "/dev/ttyACM0")
         self.baud = int(rospy.get_param("~baud", "115200"))
 
+        self.init_connection = False
+
+        self.sent_messages = 0
+
         if self.enable:
             rospy.loginfo("Nordic_send - opening serial " + self.dev)
             self.serial = Serial(self.dev, timeout=1, baudrate=self.baud)
@@ -67,8 +73,8 @@ class Node:
         self.sub_fullmap = rospy.Subscriber(fullmap_topic, CompressedImage, self.callback_fullmap)
         rospy.loginfo("Nordic_send - subscribed to topic " + fullmap_topic)
 
-        # initialize loop with remote station
-        self.init_connection = True    
+        # initialize loop with remote station 
+        self.init_connection = True
 
     def run(self):
         rospy.spin()
@@ -96,6 +102,8 @@ class Node:
         else:
             if self.images_sent < self.image_map_ratio:
                 rospy.loginfo("Nordic_send - sending camera image")
+                if not self.camera_image:
+                    return
                 self.send_compressed_image(self.camera_image)
                 self.images_sent += 1
                 if self.images_sent == self.image_map_ratio:
@@ -104,17 +112,13 @@ class Node:
             else:
                 rospy.loginfo("Nordic_send - sending tilemap image")
                 self.images_sent = 0
+                if not self.tilemap_image:
+                    return
                 self.tilemap_image.header.seq = self.pose_array
                 self.send_compressed_image(self.tilemap_image)
 
     def callback_pose(self,poseStamped):
-        array = np.array([poseStamped.pose.position.x, poseStamped.pose.position.y], dtype = np.uint16)
-        print(bytes(array))
-        print(array)
-        array = array.astype(np.uint32)
-        print(array)
-        print(bytes(array))
-        self.pose_array = array[0]
+        self.pose_array = self.two_uint16_to_uint32(poseStamped.pose.position.x, poseStamped.pose.position.y)
 
     def callback_camera(self, compressedImage):
         compressedImage.header.frame_id = "cam"
@@ -132,6 +136,11 @@ class Node:
         self.tilemap_image = compressedImage
 
     def send_compressed_image(self, compressedImage):
+        if self.sent_messages == 1:
+           return
+
+        self.sent_messages += 1
+
         if self.enable:
             self.write_serial(compressedImage)
 
@@ -148,10 +157,12 @@ class Node:
 
     def send_as_chunks(self, data):
         size = len(data)
-        #print("Size: " + str(size))
+        rospy.loginfo("Message length: " + str(size))
         n = 64
 
-        #print("Entire message: \n" + binascii.hexlify(data))
+        #rospy.loginfo(binascii.hexlify(data))
+
+        rospy.loginfo("Nordic_send - starting send")
         
         chunks = [data[i:i+n] for i in range(0, size, n)]
 
@@ -164,13 +175,18 @@ class Node:
         chunks.insert(0,b'start'+last_packet_byte)
         chunks.append(b'end')
 
-        #print("Num packets: " + str(len(chunks)))
+        print("Num packets: " + str(len(chunks)))
 
         for chunk in chunks:
+            #self.serial = Serial(self.dev, timeout=1, baudrate=self.baud)
             self.serial.write(chunk)
-            self.serial = Serial(self.dev, timeout=1, baudrate=self.baud)
             #print(str(len(chunk)))
-            #print (binascii.hexlify(chunk)
+            print(binascii.hexlify(chunk))
+
+        rospy.loginfo("Nordic_send - finish send")
+
+    def two_uint16_to_uint32(self, firstval, secondval):
+        return c_uint32(c_uint32(int(firstval) << 16).value | int(secondval)).value
 
 if __name__ == '__main__':
     rospy.init_node('nordic_send', anonymous=True)

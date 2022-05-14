@@ -93,12 +93,17 @@ public:
   }
 
   void mapCallback(const nav_msgs::OccupancyGridConstPtr& map) {
+    ROS_INFO("Map PTR");
     map_ptr_ = map;
   }
 
   //The map->image conversion runs every time a new map is received at the moment
   void mapBoolCallback(const std_msgs::BoolPtr& mapType)
   {
+    if (!map_ptr_) {
+      return;
+    }
+
     const nav_msgs::OccupancyGridConstPtr& map = map_ptr_;
   
     int size_x = map->info.width;
@@ -111,7 +116,7 @@ public:
 
     // if true, do full maptype
     if (mapType->data) {
-
+      ROS_INFO("maptype TRUE");
       // to line 118 inserts by Eric, publish adjusted int pose position to image map
       geometry_msgs::PoseStamped adjusted_pose;
 
@@ -124,6 +129,8 @@ public:
 
       adjusted_pose.pose.position.x = rob_position_mapi.x();
       adjusted_pose.pose.position.y = rob_position_mapi.y();
+
+      ROS_INFO("published pose");
 
       adjusted_pose_pub_.publish(adjusted_pose);
 

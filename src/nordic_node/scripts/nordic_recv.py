@@ -8,6 +8,9 @@ from sensor_msgs.msg import Joy
 from serial import Serial, serialutil
 import StringIO
 import sys
+import binascii
+import struct
+import traceback
 
 # recieve data messages from nordic, get message type and publish
 class Node:
@@ -81,11 +84,11 @@ class Node:
             data = data[:64]
             
             if data[0:5] == b'start':
-                print(binascii.hexlify(data))
-                print(type(data))
-                print("last_packet bytes: " + str(binascii.hexlify(data[5:6])))
-                last_packet = int.from_bytes(data[5:6], 'big')
-                print ("last_packet: " + str(last_packet))
+                #print(binascii.hexlify(data))
+                #print(type(data))
+                #print("last_packet bytes: " + str(binascii.hexlify(data[5:6])))
+                last_packet = struct.unpack(">i",b'00'+data[5:6])[0]
+                #print ("last_packet: " + str(last_packet))
                 message = b''
             elif data[0:3] == b'end':
                 twistStamped = TwistStamped()
@@ -99,7 +102,7 @@ class Node:
                 except:
                     rospy.logerr("Deserialization of message failed, traceback: \n" + traceback.format_exc())
 
-                #print(compressedImage)
+                rospy.loginfo("Nordic_recv - received message : \n" + str(twistStamped))
 
                 boolean = Bool()
                 boolean.data = False

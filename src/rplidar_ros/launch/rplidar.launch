@@ -2,7 +2,7 @@
   <arg name="dev" default="/dev/ttyUSB0"/>
   <arg name="baud" default="115200"/>
   <arg name="scan_topic" default="/scan"/>
-
+  
   <node name="rplidarNode"          pkg="rplidar_ros"  type="rplidarNode" output="screen">
     <remap from="/scan" to="$(arg scan_topic)"/>
     <param name="serial_port"         type="string" value="$(arg dev)"/>

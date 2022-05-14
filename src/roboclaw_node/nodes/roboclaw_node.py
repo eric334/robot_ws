@@ -200,6 +200,7 @@ class Node:
     def run(self):
         if not self.enable:
             rospy.spin()
+            return
 
         rospy.loginfo("Starting motor drive")
         r_time = rospy.Rate(10)
