@@ -20,7 +20,7 @@ class Node:
         self.enable = rospy.get_param("~enable")
         if self.direct_server:
             self.enable = False
-            self.direct_server = direct_server_.Connection()
+            self.direct_server = direct_server_.Connection(6001)
 
         self.enable_reply_ticks = rospy.get_param("~enable_reply_ticks")
 
@@ -50,14 +50,25 @@ class Node:
 
         if self.direct_server:
             while not rospy.is_shutdown():
+                message = None
+                while not rospy.is_shutdown() and message is None:
+                    message = self.direct_server.recv_data()
+                    if message is None:
+                        rospy.sleep(1)
+
+                print(str(len(message)))
+
+                print(str(binascii.hexlify(message)))
+
+                twistStamped = self.deserialize_twist(message)
+
+                boolean.data = self.publish_appropriate(twistStamped)
 
                 self.pub_reply.publish(boolean)
 
-                data = self.direct_server.recv_data()
+                return
 
-                twistStamped = self.deserialize_twist(data)
-
-                boolean.data = self.publish_appropriate(twistStamped)
+            return
 
 
         if not self.enable:

@@ -27,7 +27,7 @@ class Node:
         self.enable = rospy.get_param("~enable")
         if self.direct_server:
             self.enable = False
-            self.direct_server = direct_server_.Connection()
+            self.direct_server = direct_server_.Connection(6000)
 
         camera_topic = rospy.get_param("~camera_topic")
         tilemap_topic = rospy.get_param("~tilemap_topic")
@@ -138,12 +138,13 @@ class Node:
 
     def write_buffer(self, compressedImage):
         buffer = BytesIO()
-        print(compressedImage.header.seq)
         compressedImage.serialize(buffer)
 
         if self.enable:
             self.send_as_chunks(buffer.getvalue())
         if self.direct_server:
+            print(str(len(buffer.getvalue())))
+            print(binascii.hexlify(buffer.getvalue()))
             self.direct_server.send_data(buffer.getvalue())
 
     def set_compressedimage_quality(self, topic, quality):
