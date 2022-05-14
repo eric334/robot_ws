@@ -41,7 +41,6 @@ class Connection:
                 if remaining_size < chunk_size:
                     recv_size = remaining_size
                 data = self.client_socket.recv(chunk_size)
-                print(len(data))
                 message += data
 
             message = message[:size]
@@ -54,7 +53,13 @@ class Connection:
     def send_data(self, data):
         try:
             self.aquire_connection()
-            self.client_socket.send(data)
+            size = len(data)
+            chunks = [data[i:i+chunk_size] for i in range(0, size, chunk_size)]
+            size_bytes = struct.pack(">i",size)
+            self.client_socket.send(size_bytes)
+            for chunk in chunks:
+                self.client_socket.send(chunk)
+                #print(chunk)
         except Exception:
             print ("Data send failed.")
             print(traceback.format_exc())
@@ -76,11 +81,11 @@ class Connection:
             self.local_socket.close()
             self.local_socket = None
 
-if __name__ == '__main__':
-    connection = Connection(6000)
-    data = connection.recv_data()
+# if __name__ == '__main__':
+#     connection = Connection(6000)
+#     data = connection.recv_data()
 
-    print(str(len(data)))
-    print(str(binascii.hexlify(data)))
+#     print(str(len(data)))
+#     print(str(binascii.hexlify(data)))
 
-    connection.close_socket()
+#     connection.close_socket()

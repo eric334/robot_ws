@@ -58,15 +58,15 @@ class Node:
 
                 print(str(len(message)))
 
-                print(str(binascii.hexlify(message)))
+                #print(str(binascii.hexlify(message)))
 
                 twistStamped = self.deserialize_twist(message)
+
+                print(twistStamped)
 
                 boolean.data = self.publish_appropriate(twistStamped)
 
                 self.pub_reply.publish(boolean)
-
-                return
 
             return
 

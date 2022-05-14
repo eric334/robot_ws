@@ -130,8 +130,8 @@ class Node:
         self.tilemap_image = compressedImage
 
     def send_compressed_image(self, compressedImage):
-        if self.sent_messages == 1:
-           return
+        # if self.sent_messages == 1:
+        #    return
 
         self.sent_messages += 1
         self.write_buffer(compressedImage)
@@ -144,7 +144,7 @@ class Node:
             self.send_as_chunks(buffer.getvalue())
         if self.direct_server:
             print(str(len(buffer.getvalue())))
-            print(binascii.hexlify(buffer.getvalue()))
+            #print(binascii.hexlify(buffer.getvalue()))
             self.direct_server.send_data(buffer.getvalue())
 
     def set_compressedimage_quality(self, topic, quality):

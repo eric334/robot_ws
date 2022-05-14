@@ -20,7 +20,7 @@
     <arg name="maestro_topic" value="/command/deploy"/>
     <arg name="roboclaw_topic" value="/command/twist"/>
     <arg name="jpeg_quality_level" value="40"/>
-	<arg name="image_map_ratio" default="5"/>
+	<arg name="image_map_ratio" default="100"/>
   </include>
 
   <!-- Roboclaw motor controller -->
