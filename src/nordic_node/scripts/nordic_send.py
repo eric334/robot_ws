@@ -28,6 +28,7 @@ class Node:
         if self.direct_server:
             self.enable = False
             self.direct_server = direct_server_.Connection(6000)
+            rospy.on_shutdown(self.hook_server)
 
         camera_topic = rospy.get_param("~camera_topic")
         tilemap_topic = rospy.get_param("~tilemap_topic")
@@ -75,6 +76,9 @@ class Node:
         self.sub_fullmap = rospy.Subscriber(fullmap_topic, CompressedImage, self.callback_fullmap)
         rospy.loginfo("Nordic_send - subscribed to topic " + fullmap_topic)
 
+    def hook_server(self):
+        self.direct_server.close_socket()
+    
     def run(self):
         rospy.spin()
 
@@ -96,6 +100,7 @@ class Node:
 
     def callback_reply(self, boolean):
         # deploy node
+        print(str(boolean.data))
         if boolean.data:
             # initialize node deployment
             self.send_node_init()

@@ -161,6 +161,13 @@
 /home/nvidia/robot_ws/build/nordic_node/CMakeFiles/install/local.dir
 /home/nvidia/robot_ws/build/nordic_node/CMakeFiles/test.dir
 /home/nvidia/robot_ws/build/nordic_node/CMakeFiles/edit_cache.dir
+/home/nvidia/robot_ws/build/roboclaw_node/CMakeFiles/list_install_components.dir
+/home/nvidia/robot_ws/build/roboclaw_node/CMakeFiles/install.dir
+/home/nvidia/robot_ws/build/roboclaw_node/CMakeFiles/rebuild_cache.dir
+/home/nvidia/robot_ws/build/roboclaw_node/CMakeFiles/install/strip.dir
+/home/nvidia/robot_ws/build/roboclaw_node/CMakeFiles/install/local.dir
+/home/nvidia/robot_ws/build/roboclaw_node/CMakeFiles/test.dir
+/home/nvidia/robot_ws/build/roboclaw_node/CMakeFiles/edit_cache.dir
 /home/nvidia/robot_ws/build/hector_slam/hector_compressed_map_transport/CMakeFiles/install.dir
 /home/nvidia/robot_ws/build/hector_slam/hector_compressed_map_transport/CMakeFiles/rebuild_cache.dir
 /home/nvidia/robot_ws/build/hector_slam/hector_compressed_map_transport/CMakeFiles/sensor_msgs_generate_messages_eus.dir
@@ -230,13 +237,6 @@
 /home/nvidia/robot_ws/build/hector_slam/hector_trajectory_server/CMakeFiles/install/strip.dir
 /home/nvidia/robot_ws/build/hector_slam/hector_trajectory_server/CMakeFiles/install/local.dir
 /home/nvidia/robot_ws/build/hector_slam/hector_trajectory_server/CMakeFiles/test.dir
-/home/nvidia/robot_ws/build/roboclaw_node/CMakeFiles/list_install_components.dir
-/home/nvidia/robot_ws/build/roboclaw_node/CMakeFiles/install.dir
-/home/nvidia/robot_ws/build/roboclaw_node/CMakeFiles/rebuild_cache.dir
-/home/nvidia/robot_ws/build/roboclaw_node/CMakeFiles/install/strip.dir
-/home/nvidia/robot_ws/build/roboclaw_node/CMakeFiles/install/local.dir
-/home/nvidia/robot_ws/build/roboclaw_node/CMakeFiles/test.dir
-/home/nvidia/robot_ws/build/roboclaw_node/CMakeFiles/edit_cache.dir
 /home/nvidia/robot_ws/build/hector_slam/hector_mapping/CMakeFiles/list_install_components.dir
 /home/nvidia/robot_ws/build/hector_slam/hector_mapping/CMakeFiles/install.dir
 /home/nvidia/robot_ws/build/hector_slam/hector_mapping/CMakeFiles/rebuild_cache.dir

@@ -5,4 +5,4 @@ PROJECT_CATKIN_DEPENDS = "".replace(';', ' ')
 PKG_CONFIG_LIBRARIES_WITH_PREFIX = "".split(';') if "" != "" else []
 PROJECT_NAME = "roboclaw_node"
 PROJECT_SPACE_DIR = "/home/nvidia/robot_ws/devel"
-PROJECT_VERSION = "0.0.1"
+PROJECT_VERSION = "0.0.0"

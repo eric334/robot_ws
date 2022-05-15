@@ -2,7 +2,7 @@ prefix=/home/nvidia/robot_ws/devel
 
 Name: roboclaw_node
 Description: Description of roboclaw_node
-Version: 0.0.1
+Version: 0.0.0
 Cflags: 
 Libs: -L${prefix}/lib 
 Requires: 

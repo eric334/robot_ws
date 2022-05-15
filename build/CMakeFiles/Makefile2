@@ -2636,6 +2636,24 @@ nordic_node/preinstall:
 .PHONY : nordic_node/preinstall
 
 #=============================================================================
+# Directory level rules for directory roboclaw_node
+
+# Convenience name for "all" pass in the directory.
+roboclaw_node/all:
+
+.PHONY : roboclaw_node/all
+
+# Convenience name for "clean" pass in the directory.
+roboclaw_node/clean:
+
+.PHONY : roboclaw_node/clean
+
+# Convenience name for "preinstall" pass in the directory.
+roboclaw_node/preinstall:
+
+.PHONY : roboclaw_node/preinstall
+
+#=============================================================================
 # Directory level rules for directory hector_slam/hector_compressed_map_transport
 
 # Convenience name for "all" pass in the directory.
@@ -3776,24 +3794,6 @@ hector_slam/hector_trajectory_server/CMakeFiles/hector_trajectory_server.dir/cle
 clean: hector_slam/hector_trajectory_server/CMakeFiles/hector_trajectory_server.dir/clean
 
 .PHONY : clean
-
-#=============================================================================
-# Directory level rules for directory roboclaw_node
-
-# Convenience name for "all" pass in the directory.
-roboclaw_node/all:
-
-.PHONY : roboclaw_node/all
-
-# Convenience name for "clean" pass in the directory.
-roboclaw_node/clean:
-
-.PHONY : roboclaw_node/clean
-
-# Convenience name for "preinstall" pass in the directory.
-roboclaw_node/preinstall:
-
-.PHONY : roboclaw_node/preinstall
 
 #=============================================================================
 # Directory level rules for directory hector_slam/hector_mapping

@@ -33,9 +33,10 @@ class Node:
         # just in case the bootdown was not so good
         self.stop()
 
-        self.speed_multiplier = float(rospy.get_param("~speed_multiplier", "1.0"))
+        self.speed_multiplier = min(float(rospy.get_param("~speed_multiplier", "1.0")), 127)
 
         self.latest_set = rospy.get_rostime()
+
 
     def run(self):
         if not self.enable:
@@ -58,18 +59,20 @@ class Node:
 
         self.latest_set = rospy.get_rostime()
 
-        right_speed = (twist.linear.x + twist.angular.z) * self.speed_multiplier
-        left_speed = (twist.linear.x - twist.angular.z) * self.speed_multiplier
+        right_speed = int(max(min(twist.linear.x + twist.angular.z, 1), -1)  * self.speed_multiplier)
+        left_speed = int(max(min(twist.linear.x - twist.angular.z, 1), -1) * self.speed_multiplier)
+
+        print(right_speed)
+        print(left_speed)
 
         if right_speed > 0:
-            self.roboclaw.ForwardM1(self.address, right_speed if right_speed > max_speed else max_speed)
+            self.roboclaw.ForwardM1(self.address, right_speed)
         else:
-            self.roboclaw.BackwardM1(self.address, right_speed if right_speed < max_speed else -1 * max_speed)
-
+            self.roboclaw.BackwardM1(self.address, right_speed * -1)
         if left_speed > 0:
-            self.roboclaw.ForwardM2(self.address, left_speed if left_speed > max_speed else max_speed)
+            self.roboclaw.ForwardM2(self.address, left_speed)
         else:
-            self.roboclaw.BackwardM2(self.address, left_speed if left_speed < max_speed else -1 * max_speed)
+            self.roboclaw.BackwardM2(self.address, left_speed * -1)
 
     def stop(self):
         self.roboclaw.ForwardM1(self.address, 0)

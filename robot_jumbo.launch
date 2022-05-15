@@ -20,18 +20,18 @@
     <arg name="maestro_topic" value="/command/deploy"/>
     <arg name="roboclaw_topic" value="/command/twist"/>
     <arg name="camera_jpeg_quality_level" value="40"/>
-	<arg name="tilemap_jpeg_quality_level" value="95"/>
-	<arg name="fullmap_jpeg_quality_level" value="95"/>
+	<arg name="tilemap_jpeg_quality_level" value="80"/>
+	<arg name="fullmap_jpeg_quality_level" value="80"/>
 	<arg name="image_map_ratio" default="2"/>
   </include>
 
   <!-- Roboclaw motor controller -->
   <include file="src/roboclaw_node/launch/roboclaw.launch">
-    <arg name="enable" value="False"/>
+    <arg name="enable" value="True"/>
     <arg name="dev" value="/dev/ttyACM0"/>
     <arg name="baud" value="115200"/>
-    <arg name="speed_multiplier" value="2.0"/>
-    <arg name="subscribed_topic" value="command/twist"/>
+    <arg name="speed_multiplier" value="15.0"/>
+    <arg name="twist_topic" value="command/twist"/>
   </include>
 
   <!-- Maestro motor controller -->
