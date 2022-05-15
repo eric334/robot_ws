@@ -15,6 +15,7 @@ chunk_size = 512
 
 class Connection:
     def __init__(self, port):
+        self.enable = True
         self.client_socket = None
         ip = "10.0.1.128"
         try:
@@ -29,6 +30,8 @@ class Connection:
             self.local_socket = None
         
     def recv_data(self):
+        if not self.enable:
+            return
         # this works for singular connection
         try:
             self.aquire_connection()
@@ -51,6 +54,8 @@ class Connection:
             print(traceback.format_exc())
 
     def send_data(self, data):
+        if not self.enable:
+            return
         try:
             self.aquire_connection()
             size = len(data)
@@ -74,6 +79,7 @@ class Connection:
             print(traceback.format_exc())
 
     def close_socket(self):
+        self.enable = False
         if self.client_socket:
             self.client_socket.close()
             self.client_socket = None

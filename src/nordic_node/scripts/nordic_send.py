@@ -34,7 +34,6 @@ class Node:
         fullmap_topic = rospy.get_param("~fullmap_topic")
         map_pose_topic = rospy.get_param("~map_pose_topic")
         reply_topic = rospy.get_param("~reply_topic")
-        jpeg_quality = rospy.get_param("~jpeg_quality_level")
         render_map_topic = rospy.get_param("~render_map_topic")
         
         self.image_map_ratio = int(rospy.get_param("~image_map_ratio"))
@@ -45,9 +44,9 @@ class Node:
         self.fullmap_image = None
         self.pose_array = 0
 
-        self.set_compressedimage_quality(camera_topic, jpeg_quality)
-        self.set_compressedimage_quality(tilemap_topic, jpeg_quality)
-        self.set_compressedimage_quality(fullmap_topic, jpeg_quality)
+        self.set_compressedimage_quality(camera_topic, rospy.get_param("~camera_jpeg_quality_level"))
+        self.set_compressedimage_quality(tilemap_topic, rospy.get_param("~tilemap_jpeg_quality_level"))
+        self.set_compressedimage_quality(fullmap_topic, rospy.get_param("~fullmap_jpeg_quality_level"))
 
         self.dev = rospy.get_param("~dev", "/dev/ttyACM0")
         self.baud = int(rospy.get_param("~baud", "115200"))
@@ -90,6 +89,10 @@ class Node:
         fullmap_image.header.seq = self.pose_array
 
         self.send_compressed_image(fullmap_image)
+
+    def send_node_init(self):
+        # TODO WRITE PROCESS FOR NODE ACTIVATION
+        return
 
     def callback_reply(self, boolean):
         # deploy node

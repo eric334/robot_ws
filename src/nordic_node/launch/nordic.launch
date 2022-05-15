@@ -7,7 +7,9 @@
     <arg name="fullmap_topic" default="/map_image/full/compressed"/>
     <arg name="reply_topic" default="/send_reply"/>
     <arg name="render_map_topic" default="/render_map"/>
-    <arg name="jpeg_quality_level" default="40"/>
+    <arg name="camera_jpeg_quality_level" default="40"/>
+    <arg name="tilemap_jpeg_quality_level" default="60"/>
+    <arg name="fullmap_jpeg_quality_level" default="60"/>
 
     <arg name="image_map_ratio" default="5"/>
 
@@ -29,7 +31,9 @@
         <param name="~tilemap_topic" value="$(arg tilemap_topic)"/>
         <param name="~fullmap_topic" value="$(arg fullmap_topic)"/>
         <param name="~reply_topic" value="$(arg reply_topic)"/>
-        <param name="~jpeg_quality_level" value="$(arg jpeg_quality_level)"/>
+        <param name="~camera_jpeg_quality_level" value="$(arg camera_jpeg_quality_level)"/>
+        <param name="~tilemap_jpeg_quality_level" value="$(arg tilemap_jpeg_quality_level)"/>
+        <param name="~fullmap_jpeg_quality_level" value="$(arg fullmap_jpeg_quality_level)"/>
         <param name="~render_map_topic" value="$(arg render_map_topic)"/>
         <param name="~map_pose_topic" value= "$(arg map_pose_topic)"/>
         <param name="~image_map_ratio" value= "$(arg image_map_ratio)"/>

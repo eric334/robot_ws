@@ -44,6 +44,12 @@ class Node:
         self.pub_reply = rospy.Publisher(reply_topic, Bool, queue_size=1)
         rospy.loginfo("Nordic_recv - published topic : " + reply_topic)
 
+        if self.direct_server:
+            rospy.on_shutdown(self.hook_server)
+
+    def hook_server(self):
+        self.direct_server.close_socket()
+
     def run(self):
         boolean = Bool()
         boolean.data = False
@@ -55,6 +61,8 @@ class Node:
                     message = self.direct_server.recv_data()
                     if message is None:
                         rospy.sleep(1)
+                if not message:
+                    return
 
                 print(str(len(message)))
 
@@ -67,6 +75,8 @@ class Node:
                 boolean.data = self.publish_appropriate(twistStamped)
 
                 self.pub_reply.publish(boolean)
+
+            self.direct_server.close_socket()
 
             return
 

@@ -19,8 +19,10 @@
     <arg name="render_map_topic" value="/render_map"/>
     <arg name="maestro_topic" value="/command/deploy"/>
     <arg name="roboclaw_topic" value="/command/twist"/>
-    <arg name="jpeg_quality_level" value="40"/>
-	<arg name="image_map_ratio" default="100"/>
+    <arg name="camera_jpeg_quality_level" value="40"/>
+	<arg name="tilemap_jpeg_quality_level" value="95"/>
+	<arg name="fullmap_jpeg_quality_level" value="95"/>
+	<arg name="image_map_ratio" default="2"/>
   </include>
 
   <!-- Roboclaw motor controller -->
