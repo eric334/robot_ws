@@ -30,7 +30,7 @@
     <arg name="enable" value="False"/>
     <arg name="dev" value="/dev/ttyACM0"/>
     <arg name="baud" value="115200"/>
-    <arg name="max_speed" value="2.0"/>
+    <arg name="speed_multiplier" value="2.0"/>
     <arg name="subscribed_topic" value="command/twist"/>
   </include>
 

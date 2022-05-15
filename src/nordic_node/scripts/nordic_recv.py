@@ -21,6 +21,7 @@ class Node:
         if self.direct_server:
             self.enable = False
             self.direct_server = direct_server_.Connection(6001)
+            rospy.on_shutdown(self.hook_server)
 
         self.enable_reply_ticks = rospy.get_param("~enable_reply_ticks")
 
@@ -43,9 +44,6 @@ class Node:
         
         self.pub_reply = rospy.Publisher(reply_topic, Bool, queue_size=1)
         rospy.loginfo("Nordic_recv - published topic : " + reply_topic)
-
-        if self.direct_server:
-            rospy.on_shutdown(self.hook_server)
 
     def hook_server(self):
         self.direct_server.close_socket()
