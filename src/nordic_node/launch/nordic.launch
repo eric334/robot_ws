@@ -46,7 +46,7 @@
         <param name="~enable" value="$(arg enable)"/>
         <param name="~enable_reply_ticks" value="$(arg enable_reply_ticks)"/>
         <param name="~reply_topic" value="$(arg reply_topic)"/>
-        <param name="~maestro_topic" value="$(arg maestro_topic)"/>
+        <param name="~maestro_topic" value="$(arg maestro_topic)"/>z
         <param name="~roboclaw_topic" value="$(arg roboclaw_topic)"/>
         <param name="~direct_server" value="$(arg direct_server)"/>
     </node>

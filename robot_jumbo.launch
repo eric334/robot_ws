@@ -19,9 +19,9 @@
     <arg name="render_map_topic" value="/render_map"/>
     <arg name="maestro_topic" value="/command/deploy"/>
     <arg name="roboclaw_topic" value="/command/twist"/>
-    <arg name="camera_jpeg_quality_level" value="40"/>
-	<arg name="tilemap_jpeg_quality_level" value="80"/>
-	<arg name="fullmap_jpeg_quality_level" value="80"/>
+    <arg name="camera_jpeg_quality_level" value="55"/>
+	<arg name="tilemap_jpeg_quality_level" value="90"/>
+	<arg name="fullmap_jpeg_quality_level" value="90"/>
 	<arg name="image_map_ratio" default="2"/>
   </include>
 
@@ -43,8 +43,8 @@
   <!-- USB cam controller -->
   <include file="src/usb_cam/launch/usb_cam.launch">
     <arg name="dev" value="/dev/video1" />
-	<arg name="width" value="176"/>
-    <arg name="height" value="144"/>
+	<arg name="width" value="352"/>
+    <arg name="height" value="288"/>
     <arg name="fps" value="6"/>
   </include>
 

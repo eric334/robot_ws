@@ -61,8 +61,8 @@ class Node:
 
         self.latest_set = rospy.get_rostime()
 
-        right_speed = -1 * int(max(min(twist.linear.x + (-1* twist.angular.z), 1), -1)  * self.speed_multiplier)
-        left_speed = -1 * int(max(min(twist.linear.x - (-1* twist.angular.z), 1), -1) * self.speed_multiplier)
+        right_speed = -1 * int(max(min(twist.linear.x + (-1* twist.angular.z), 1.3), -1.3)  * self.speed_multiplier)
+        left_speed = -1 * int(max(min(twist.linear.x - (-1* twist.angular.z), 1.3), -1.3) * self.speed_multiplier)
 
         print(right_speed)
         print(left_speed)
