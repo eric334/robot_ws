@@ -79,13 +79,10 @@ class Connection:
             print(traceback.format_exc())
 
     def close_socket(self):
+        print("closing socket")
         self.enable = False
-        if self.client_socket:
-            self.client_socket.close()
-            self.client_socket = None
-        if self.local_socket:
-            self.local_socket.close()
-            self.local_socket = None
+        self.client_socket.close()
+        self.local_socket.close()
 
 # if __name__ == '__main__':
 #     connection = Connection(6000)

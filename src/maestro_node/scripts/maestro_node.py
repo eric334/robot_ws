@@ -22,11 +22,11 @@ class Node:
 
     def callback(self, data):
         os.system('mono '+str(self.cwd)+'/scripts/UscCmd --servo 0,1000')
-        time.sleep(2.335)
+        time.sleep(4.065)
         os.system('mono '+str(self.cwd)+'/scripts/UscCmd --servo 0,0')
         time.sleep(1)
         os.system('mono '+str(self.cwd)+'/scripts/UscCmd --servo 0,50000')
-        time.sleep(2.35)
+        time.sleep(4.065)
         os.system('mono '+str(self.cwd)+'/scripts/UscCmd --servo 0,0')
 
 if __name__ == '__main__':

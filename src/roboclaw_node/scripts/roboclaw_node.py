@@ -25,6 +25,8 @@ class Node:
         dev = rospy.get_param("~dev", "/dev/ttyACM0")
         baud = int(rospy.get_param("~baud", "115200"))
         self.address = int(rospy.get_param("~address", "128"))
+	
+	rospy.loginfo("Roboclaw_node - dev : " + dev)
 
         self.roboclaw = Roboclaw(dev, baud)
 
@@ -59,8 +61,8 @@ class Node:
 
         self.latest_set = rospy.get_rostime()
 
-        right_speed = int(max(min(twist.linear.x + twist.angular.z, 1), -1)  * self.speed_multiplier)
-        left_speed = int(max(min(twist.linear.x - twist.angular.z, 1), -1) * self.speed_multiplier)
+        right_speed = -1 * int(max(min(twist.linear.x + (-1* twist.angular.z), 1), -1)  * self.speed_multiplier)
+        left_speed = -1 * int(max(min(twist.linear.x - (-1* twist.angular.z), 1), -1) * self.speed_multiplier)
 
         print(right_speed)
         print(left_speed)

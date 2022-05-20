@@ -28,9 +28,9 @@
   <!-- Roboclaw motor controller -->
   <include file="src/roboclaw_node/launch/roboclaw.launch">
     <arg name="enable" value="True"/>
-    <arg name="dev" value="/dev/ttyACM0"/>
+    <arg name="dev" value="/dev/ttyACM3"/>
     <arg name="baud" value="115200"/>
-    <arg name="speed_multiplier" value="15.0"/>
+    <arg name="speed_multiplier" value="36.0"/>
     <arg name="twist_topic" value="command/twist"/>
   </include>
 
@@ -43,7 +43,7 @@
   <!-- USB cam controller -->
   <include file="src/usb_cam/launch/usb_cam.launch">
     <arg name="dev" value="/dev/video1" />
-    <arg name="width" value="176"/>
+	<arg name="width" value="176"/>
     <arg name="height" value="144"/>
     <arg name="fps" value="6"/>
   </include>
@@ -51,7 +51,7 @@
   <!-- Lidar controller -->
   <include file="src/rplidar_ros/launch/rplidar.launch">
     <!-- may be USB0 or USB1 depending on maestro?-->
-    <arg name="dev" value="/dev/ttyUSB0"/>
+    <arg name="dev" value="/dev/ttyUSB1"/>
     <arg name="baud" value="115200"/>
 	<arg name="scan_topic" value="/scan/scan"/>
   </include>
