@@ -18,7 +18,7 @@
 
     <arg name="map_pose_topic" default="map_image/adjusted_pose"/>
 
-    <arg name="direct_server" default="True"/>
+    <arg name="direct_server" default="False"/>
 
     <arg name="enable" default="True"/>
     <arg name="enable_reply_ticks" default="False"/>

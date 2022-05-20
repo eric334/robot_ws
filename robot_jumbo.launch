@@ -27,7 +27,7 @@
 
   <!-- Roboclaw motor controller -->
   <include file="src/roboclaw_node/launch/roboclaw.launch">
-    <arg name="enable" value="True"/>
+    <arg name="enable" value="False"/>
     <arg name="dev" value="/dev/ttyACM3"/>
     <arg name="baud" value="115200"/>
     <arg name="speed_multiplier" value="36.0"/>
@@ -42,7 +42,7 @@
 
   <!-- USB cam controller -->
   <include file="src/usb_cam/launch/usb_cam.launch">
-    <arg name="dev" value="/dev/video1" />
+    <arg name="dev" value="/dev/video0" />
 	<arg name="width" value="352"/>
     <arg name="height" value="288"/>
     <arg name="fps" value="6"/>
