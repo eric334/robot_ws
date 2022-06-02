@@ -9,8 +9,11 @@ If Xenial (Ubu 16.04) AION image is already installed, skip the first step and l
 - <code>roslaunch robot_jumbo.launch</code> in terminal
 
 ## Configuring Device Ports
-Serial ports are randomized on boot, so it is necessary to assign each device the serial <code>dev</code>
+Serial ports are inconsitently assigned on boot, so it is necessary to assign each device the serial <code>dev</code>
 - For each serial device
   - Unplug and replug device from board
   - Use <code>dmesg | grep tty</code> to find the latest attached port
+  - Use this <code>dev</code> in <code>roslaunch robot_jumbo.launch</code>
+- For the USB Camera
+  - Use <code>v4l2-ctl --list-devices</code> to find the camera devices
   - Use this <code>dev</code> in <code>roslaunch robot_jumbo.launch</code>
