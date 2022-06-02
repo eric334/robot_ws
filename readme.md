@@ -9,7 +9,7 @@ If Xenial (Ubu 16.04) AION image is already installed, skip the first step and l
 - <code>roslaunch robot_jumbo.launch</code> in terminal
 
 You may also wish to install nomachine for remote desktop view. Jetson TX2 is ARM.  
-For normal work however, it is recommended to power the TX2 via barrel plug adapter and connect HDMI monitor.
+For normal work however, it is recommended to power the TX2 via barrel plug adapter and connect an HDMI monitor.
 
 ## Configuring Device Ports
 Serial ports are inconsistently assigned on boot, so it is necessary to assign each device the serial <code>dev</code>
